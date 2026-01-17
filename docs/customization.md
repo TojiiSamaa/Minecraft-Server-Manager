@@ -1,25 +1,25 @@
 # Guide de Personnalisation
 
-Guide pour etendre et personnaliser le projet Minecraft Server Manager.
+Guide pour étendre et personnaliser le projet Minecraft Server Manager.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
 - [Ajouter une commande](#ajouter-une-commande)
 - [Modifier les embeds](#modifier-les-embeds)
 - [Ajouter une notification](#ajouter-une-notification)
-- [Etendre l'API](#etendre-lapi)
+- [Étendre l'API](#étendre-lapi)
 - [Personnaliser le dashboard](#personnaliser-le-dashboard)
-- [Creer un plugin](#creer-un-plugin)
+- [Créer un plugin](#créer-un-plugin)
 - [Bonnes pratiques](#bonnes-pratiques)
 
 ---
 
 ## Vue d'ensemble
 
-Le projet est concu pour etre facilement extensible. Cette section couvre les principales manieres de le personnaliser.
+Le projet est conçu pour être facilement extensible. Cette section couvre les principales manières de le personnaliser.
 
 ### Structure du code
 
@@ -33,17 +33,17 @@ bot/
 │   └── admin.py          # Commandes admin
 ├── utils/                 # Utilitaires
 │   ├── embeds.py         # Constructeurs d'embeds
-│   ├── permissions.py    # Systeme de permissions
+│   ├── permissions.py    # Système de permissions
 │   └── rcon.py           # Client RCON
-├── events/                # Gestionnaires d'evenements
-│   ├── player_events.py  # Evenements joueurs
-│   └── server_events.py  # Evenements serveur
-└── main.py               # Point d'entree
+├── events/                # Gestionnaires d'événements
+│   ├── player_events.py  # Événements joueurs
+│   └── server_events.py  # Événements serveur
+└── main.py               # Point d'entrée
 
 web/
 ├── app/                   # Pages Next.js
 ├── components/            # Composants React
-├── lib/                   # Bibliotheques
+├── lib/                   # Bibliothèques
 └── api/                   # Routes API
 ```
 
@@ -51,7 +51,7 @@ web/
 
 ## Ajouter une commande
 
-### Etape 1 : Creer le fichier ou modifier un cog existant
+### Étape 1 : Créer le fichier ou modifier un cog existant
 
 ```python
 # bot/cogs/custom.py
@@ -63,7 +63,7 @@ from utils.permissions import require_permission, PermissionLevel
 from utils.embeds import create_embed
 
 class CustomCommands(commands.Cog):
-    """Commandes personnalisees"""
+    """Commandes personnalisées"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -92,7 +92,7 @@ async def setup(bot: commands.Bot):
     await bot.add_cog(CustomCommands(bot))
 ```
 
-### Etape 2 : Charger le cog
+### Étape 2 : Charger le cog
 
 ```python
 # bot/main.py
@@ -111,22 +111,22 @@ async def load_extensions():
         await bot.load_extension(ext)
 ```
 
-### Etape 3 : Ajouter des permissions
+### Étape 3 : Ajouter des permissions
 
 ```python
 # Commande avec permission requise
-@app_commands.command(name="secret", description="Commande secrete")
+@app_commands.command(name="secret", description="Commande secrète")
 @require_permission(PermissionLevel.ADMIN)
 async def secret_command(self, interaction: discord.Interaction):
     await interaction.response.send_message("Ceci est secret !", ephemeral=True)
 ```
 
-### Etape 4 : Ajouter des parametres
+### Étape 4 : Ajouter des paramètres
 
 ```python
 @app_commands.command(name="say", description="Fait parler le bot")
 @app_commands.describe(
-    message="Le message a envoyer",
+    message="Le message à envoyer",
     channel="Le channel cible (optionnel)"
 )
 @require_permission(PermissionLevel.MODERATOR)
@@ -138,16 +138,16 @@ async def say(
 ):
     target = channel or interaction.channel
     await target.send(message)
-    await interaction.response.send_message("Message envoye !", ephemeral=True)
+    await interaction.response.send_message("Message envoyé !", ephemeral=True)
 ```
 
-### Etape 5 : Ajouter des choix predefinies
+### Étape 5 : Ajouter des choix prédéfinis
 
 ```python
 from discord.app_commands import Choice
 
 @app_commands.command(name="color", description="Choisir une couleur")
-@app_commands.describe(color="La couleur a choisir")
+@app_commands.describe(color="La couleur à choisir")
 @app_commands.choices(color=[
     Choice(name="Rouge", value="red"),
     Choice(name="Vert", value="green"),
@@ -161,10 +161,10 @@ async def color_command(
     await interaction.response.send_message(f"Vous avez choisi : {color.name}")
 ```
 
-### Etape 6 : Synchroniser les commandes
+### Étape 6 : Synchroniser les commandes
 
 ```bash
-# Redemarrer le bot ou utiliser /admin sync
+# Redémarrer le bot ou utiliser /admin sync
 docker compose restart bot
 ```
 
@@ -191,7 +191,7 @@ def create_embed(
     author: dict = None,
     timestamp: bool = True
 ) -> discord.Embed:
-    """Cree un embed standardise"""
+    """Crée un embed standardisé"""
 
     embed = discord.Embed(
         title=title,
@@ -229,12 +229,12 @@ def create_embed(
     return embed
 ```
 
-### Embeds predefinies
+### Embeds prédéfinis
 
 ```python
 # bot/utils/embeds.py
 
-# Couleurs standardisees
+# Couleurs standardisées
 class Colors:
     SUCCESS = discord.Color.green()
     ERROR = discord.Color.red()
@@ -244,9 +244,9 @@ class Colors:
 
 
 def success_embed(message: str) -> discord.Embed:
-    """Embed de succes"""
+    """Embed de succès"""
     return create_embed(
-        title="Succes",
+        title="Succès",
         description=message,
         color=Colors.SUCCESS
     )
@@ -274,10 +274,10 @@ def server_status_embed(status: dict) -> discord.Embed:
             {"name": "Version", "value": status.get('version', 'N/A'), "inline": True},
             {"name": "Joueurs", "value": f"{status.get('players', 0)}/{status.get('max_players', 20)}", "inline": True},
             {"name": "TPS", "value": str(status.get('tps', 'N/A')), "inline": True},
-            {"name": "Memoire", "value": f"{status.get('ram_used', 0)} MB", "inline": True},
+            {"name": "Mémoire", "value": f"{status.get('ram_used', 0)} MB", "inline": True},
             {"name": "Uptime", "value": status.get('uptime', 'N/A'), "inline": True}
         ],
-        footer="Derniere mise a jour"
+        footer="Dernière mise à jour"
     )
 ```
 
@@ -291,9 +291,9 @@ EMBED_COLORS = {
     'player_leave': 0xe74c3c,    # Rouge
     'player_death': 0x2c3e50,    # Noir
     'achievement': 0xf39c12,     # Or
-    'server_start': 0x27ae60,    # Vert fonce
+    'server_start': 0x27ae60,    # Vert foncé
     'server_stop': 0xe67e22,     # Orange
-    'alert': 0xc0392b,           # Rouge fonce
+    'alert': 0xc0392b,           # Rouge foncé
 }
 
 def get_color(event_type: str) -> int:
@@ -304,7 +304,7 @@ def get_color(event_type: str) -> int:
 
 ```python
 def get_player_head(username: str, size: int = 64) -> str:
-    """URL de la tete du joueur via Crafatar"""
+    """URL de la tête du joueur via Crafatar"""
     return f"https://crafatar.com/avatars/{username}?size={size}&overlay"
 
 
@@ -317,7 +317,7 @@ def get_player_body(username: str) -> str:
 
 ## Ajouter une notification
 
-### Etape 1 : Definir le type de notification
+### Étape 1 : Définir le type de notification
 
 ```python
 # bot/notifications/types.py
@@ -337,7 +337,7 @@ class NotificationType(Enum):
     CUSTOM_EVENT = "custom_event"
 ```
 
-### Etape 2 : Creer le handler de notification
+### Étape 2 : Créer le handler de notification
 
 ```python
 # bot/notifications/handlers/chat.py
@@ -346,7 +346,7 @@ from utils.embeds import create_embed
 from notifications.base import NotificationHandler
 
 class ChatNotificationHandler(NotificationHandler):
-    """Gere les notifications de chat"""
+    """Gère les notifications de chat"""
 
     notification_type = "player_chat"
 
@@ -365,7 +365,7 @@ class ChatNotificationHandler(NotificationHandler):
         return True
 ```
 
-### Etape 3 : Enregistrer le handler
+### Étape 3 : Enregistrer le handler
 
 ```python
 # bot/notifications/__init__.py
@@ -381,13 +381,13 @@ NOTIFICATION_HANDLERS = {
 }
 ```
 
-### Etape 4 : Declencher la notification
+### Étape 4 : Déclencher la notification
 
 ```python
 # bot/events/player_events.py
 
 async def on_player_chat(player: str, message: str):
-    """Appele quand un joueur ecrit dans le chat"""
+    """Appelé quand un joueur écrit dans le chat"""
     await notification_manager.send(
         notification_type='player_chat',
         data={
@@ -398,23 +398,23 @@ async def on_player_chat(player: str, message: str):
     )
 ```
 
-### Etape 5 : Ajouter la configuration
+### Étape 5 : Ajouter la configuration
 
 ```python
-# Ajouter a la commande /notifications configure
+# Ajouter à la commande /notifications configure
 NOTIFICATION_TYPES = [
     # ...existants...
     {
         'value': 'player_chat',
         'name': 'Message chat',
-        'description': 'Notification quand un joueur ecrit dans le chat'
+        'description': 'Notification quand un joueur écrit dans le chat'
     }
 ]
 ```
 
 ---
 
-## Etendre l'API
+## Étendre l'API
 
 ### Structure de l'API
 
@@ -430,7 +430,7 @@ web/
 │           └── route.ts
 ```
 
-### Creer un nouveau endpoint
+### Créer un nouveau endpoint
 
 ```typescript
 // web/app/api/custom/stats/route.ts
@@ -442,14 +442,14 @@ import { db } from '@/lib/db';
 
 // GET /api/custom/stats
 export async function GET(request: NextRequest) {
-    // Verifier l'authentification
+    // Vérifier l'authentification
     const session = await getServerSession(authOptions);
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
-        // Recuperer les statistiques
+        // Récupérer les statistiques
         const stats = await db.query(`
             SELECT
                 COUNT(*) as total_commands,
@@ -481,7 +481,7 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
 
-        // Traiter les donnees
+        // Traiter les données
         // ...
 
         return NextResponse.json({ success: true });
@@ -511,7 +511,7 @@ export async function withAuth(
         return NextResponse.json({ error: 'Missing API key' }, { status: 401 });
     }
 
-    // Verifier la cle API
+    // Vérifier la clé API
     const session = await validateApiKey(apiKey);
     if (!session) {
         return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
@@ -530,7 +530,7 @@ import { withAuth } from '@/lib/api-auth';
 
 export async function GET(request: NextRequest) {
     return withAuth(request, async (req, session) => {
-        // Code protege
+        // Code protégé
         return NextResponse.json({ user: session.user });
     });
 }
@@ -559,14 +559,14 @@ export default async function CustomPage() {
 
     return (
         <div className="container mx-auto py-6">
-            <h1 className="text-2xl font-bold mb-6">Page Personnalisee</h1>
+            <h1 className="text-2xl font-bold mb-6">Page Personnalisée</h1>
             <CustomDashboard />
         </div>
     );
 }
 ```
 
-### Creer un composant
+### Créer un composant
 
 ```typescript
 // web/components/custom/CustomDashboard.tsx
@@ -626,7 +626,7 @@ const menuItems = [
 
 ---
 
-## Creer un plugin
+## Créer un plugin
 
 ### Structure d'un plugin
 
@@ -646,7 +646,7 @@ plugins/
 {
     "name": "My Plugin",
     "version": "1.0.0",
-    "description": "Mon plugin personnalise",
+    "description": "Mon plugin personnalisé",
     "author": "VotreNom",
     "dependencies": [],
     "cog": "cog.py"
@@ -663,7 +663,7 @@ from discord import app_commands
 from discord.ext import commands
 
 class MyPlugin(commands.Cog):
-    """Mon plugin personnalise"""
+    """Mon plugin personnalisé"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -687,7 +687,7 @@ import os
 from pathlib import Path
 
 async def load_plugins(bot):
-    """Charge tous les plugins actives"""
+    """Charge tous les plugins activés"""
     plugins_dir = Path("plugins")
 
     if not plugins_dir.exists():
@@ -708,7 +708,7 @@ async def load_plugins(bot):
         cog_path = f"plugins.{plugin_dir.name}.{config['cog'].replace('.py', '')}"
         try:
             await bot.load_extension(cog_path)
-            print(f"Plugin charge : {config['name']} v{config['version']}")
+            print(f"Plugin chargé : {config['name']} v{config['version']}")
         except Exception as e:
             print(f"Erreur chargement plugin {config['name']}: {e}")
 ```
@@ -720,7 +720,7 @@ async def load_plugins(bot):
 ### Organisation du code
 
 ```python
-# Bonne pratique : separer la logique
+# Bonne pratique : séparer la logique
 class ServerCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -729,7 +729,7 @@ class ServerCommands(commands.Cog):
 
     @app_commands.command(name="status")
     async def status(self, interaction: discord.Interaction):
-        # Utiliser des services separes
+        # Utiliser des services séparés
         status = await self.rcon.get_status()
         embed = ServerEmbeds.status(status)
         await interaction.response.send_message(embed=embed)
@@ -748,7 +748,7 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
         )
     elif isinstance(error, app_commands.CommandOnCooldown):
         await interaction.response.send_message(
-            f"Commande en cooldown. Reessayez dans {error.retry_after:.1f}s",
+            f"Commande en cooldown. Réessayez dans {error.retry_after:.1f}s",
             ephemeral=True
         )
     else:
@@ -793,8 +793,8 @@ class ServerCommands(commands.Cog):
 
     Commands:
         /server status - Affiche le statut du serveur
-        /server start - Demarre le serveur
-        /server stop - Arrete le serveur
+        /server start - Démarre le serveur
+        /server stop - Arrête le serveur
     """
 ```
 

@@ -1,26 +1,26 @@
-# Minecraft Server Manager - Guide de demarrage rapide
+# Minecraft Server Manager - Guide de démarrage rapide
 
-> **Temps estime : 5 minutes**
+> **Temps estimé : 5 minutes**
 
 Ce guide vous permet de mettre en place rapidement votre serveur Minecraft avec bot Discord et panel web.
 
 ---
 
-## Table des matieres
+## Table des matières
 
-- [Prerequis](#prerequis)
+- [Prérequis](#prérequis)
 - [Installation express](#installation-express)
 - [Premier lancement](#premier-lancement)
-- [Verification](#verification)
-- [Prochaines etapes](#prochaines-etapes)
+- [Vérification](#vérification)
+- [Prochaines étapes](#prochaines-étapes)
 
 ---
 
-## Prerequis
+## Prérequis
 
 Avant de commencer, assurez-vous d'avoir :
 
-| Composant | Version minimum | Verification |
+| Composant | Version minimum | Vérification |
 |-----------|-----------------|--------------|
 | Docker | 20.10+ | `docker --version` |
 | Docker Compose | 2.0+ | `docker compose version` |
@@ -28,25 +28,25 @@ Avant de commencer, assurez-vous d'avoir :
 | RAM disponible | 8 Go minimum | - |
 | Espace disque | 20 Go minimum | - |
 
-### Prerequis Discord
+### Prérequis Discord
 
 1. Un compte Discord
-2. Une application Discord creee sur le [Developer Portal](https://discord.com/developers/applications)
-3. Un bot cree avec le token recupere
+2. Une application Discord créée sur le [Developer Portal](https://discord.com/developers/applications)
+3. Un bot créé avec le token récupéré
 4. Les identifiants OAuth2 (Client ID et Client Secret)
 
 ---
 
 ## Installation express
 
-### Etape 1 : Cloner le projet
+### Étape 1 : Cloner le projet
 
 ```bash
 git clone <url-du-repo> minecraft-server
 cd minecraft-server
 ```
 
-### Etape 2 : Lancer le script de configuration
+### Étape 2 : Lancer le script de configuration
 
 **Windows (PowerShell) :**
 ```powershell
@@ -59,34 +59,34 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-### Etape 3 : Repondre aux questions
+### Étape 3 : Répondre aux questions
 
 Le script vous demandera :
 - **Nom du projet** : ex. `MonServeur`
-- **Token Discord** : recupere sur le Developer Portal
+- **Token Discord** : récupéré sur le Developer Portal
 - **Guild ID** : ID de votre serveur Discord
 - **Client ID** : ID de l'application Discord
 - **Client Secret** : Secret OAuth2
 
-> **Note** : Les mots de passe pour PostgreSQL, Redis et RCON sont generes automatiquement.
+> **Note** : Les mots de passe pour PostgreSQL, Redis et RCON sont générés automatiquement.
 
 ---
 
 ## Premier lancement
 
-### Demarrer tous les services
+### Démarrer tous les services
 
 ```bash
 docker compose up -d
 ```
 
-### Verifier le statut
+### Vérifier le statut
 
 ```bash
 docker compose ps
 ```
 
-Vous devriez voir tous les services en etat `running` :
+Vous devriez voir tous les services en état `running` :
 
 ```
 NAME                    STATUS
@@ -103,14 +103,14 @@ monserveur-redis        running
 # Tous les services
 docker compose logs -f
 
-# Un service specifique
+# Un service spécifique
 docker compose logs -f bot
 docker compose logs -f minecraft
 ```
 
 ---
 
-## Verification
+## Vérification
 
 ### 1. Serveur Minecraft
 
@@ -120,7 +120,7 @@ Connectez-vous avec votre client Minecraft :
 
 ### 2. Bot Discord
 
-Le bot devrait apparaitre en ligne sur votre serveur Discord. Testez avec :
+Le bot devrait apparaître en ligne sur votre serveur Discord. Testez avec :
 ```
 /server status
 ```
@@ -134,11 +134,11 @@ Connectez-vous avec votre compte Discord.
 
 ---
 
-## Prochaines etapes
+## Prochaines étapes
 
-| Etape | Documentation |
+| Étape | Documentation |
 |-------|---------------|
-| Configuration avancee | [configuration.md](configuration.md) |
+| Configuration avancée | [configuration.md](configuration.md) |
 | Commandes du bot | [bot/commands.md](bot/commands.md) |
 | Gestion des permissions | [bot/permissions.md](bot/permissions.md) |
 | Configuration Docker | [docker/services.md](docker/services.md) |
@@ -149,23 +149,23 @@ Connectez-vous avec votre compte Discord.
 ## Commandes rapides
 
 ```bash
-# Demarrer les services
+# Démarrer les services
 docker compose up -d
 
-# Arreter les services
+# Arrêter les services
 docker compose down
 
-# Redemarrer un service
+# Redémarrer un service
 docker compose restart bot
 
-# Voir les logs en temps reel
+# Voir les logs en temps réel
 docker compose logs -f
 
-# Mettre a jour les images
+# Mettre à jour les images
 docker compose pull
 docker compose up -d
 
-# Sauvegarder la base de donnees
+# Sauvegarder la base de données
 docker compose exec db pg_dump -U postgres > backup.sql
 ```
 
@@ -173,10 +173,10 @@ docker compose exec db pg_dump -U postgres > backup.sql
 
 ## Support
 
-- **Documentation complete** : Consultez les autres fichiers dans `/docs`
+- **Documentation complète** : Consultez les autres fichiers dans `/docs`
 - **Issues** : Ouvrez une issue sur le repository GitHub
 - **Discord** : Rejoignez le serveur de support
 
 ---
 
-> **Astuce** : Pour une configuration plus detaillee, consultez [installation.md](installation.md).
+> **Astuce** : Pour une configuration plus détaillée, consultez [installation.md](installation.md).

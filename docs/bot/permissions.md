@@ -1,62 +1,62 @@
-# Systeme de Permissions
+# Système de Permissions
 
-Guide complet du systeme de permissions du bot Discord Minecraft.
+Guide complet du système de permissions du bot Discord Minecraft.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
 - [Niveaux de permission](#niveaux-de-permission)
-- [Configuration des roles Discord](#configuration-des-roles-discord)
+- [Configuration des rôles Discord](#configuration-des-rôles-discord)
 - [Commandes par niveau](#commandes-par-niveau)
-- [Permissions speciales](#permissions-speciales)
-- [Configuration avancee](#configuration-avancee)
-- [Troubleshooting](#troubleshooting)
+- [Permissions spéciales](#permissions-spéciales)
+- [Configuration avancée](#configuration-avancée)
+- [Dépannage](#dépannage)
 
 ---
 
 ## Vue d'ensemble
 
-Le systeme de permissions controle l'acces aux commandes du bot en fonction des roles Discord des utilisateurs.
+Le système de permissions contrôle l'accès aux commandes du bot en fonction des rôles Discord des utilisateurs.
 
 ### Principe de fonctionnement
 
 ```
 Utilisateur Discord
-        │
-        ▼
-┌───────────────────┐
-│ Verification des  │
-│    roles Discord  │
-└─────────┬─────────┘
-          │
-          ▼
-┌───────────────────┐
-│ Determination du  │
-│ niveau permission │
-└─────────┬─────────┘
-          │
-          ▼
-┌───────────────────┐
-│  Acces autorise   │
-│    ou refuse      │
-└───────────────────┘
+        |
+        v
++-------------------+
+| Vérification des  |
+|    rôles Discord  |
++---------+---------+
+          |
+          v
++-------------------+
+| Détermination du  |
+| niveau permission |
++---------+---------+
+          |
+          v
++-------------------+
+|  Accès autorisé   |
+|    ou refusé      |
++-------------------+
 ```
 
-### Hierarchie des permissions
+### Hiérarchie des permissions
 
 ```
         OWNER
-          │
+          |
         ADMIN
-          │
+          |
       MODERATOR
-          │
+          |
        PLAYER
 ```
 
-> **Note :** Chaque niveau herite des permissions des niveaux inferieurs.
+> **Note :** Chaque niveau hérite des permissions des niveaux inférieurs.
 
 ---
 
@@ -64,16 +64,16 @@ Utilisateur Discord
 
 ### 1. PLAYER (Niveau 0)
 
-**Description :** Niveau par defaut pour tous les membres du serveur Discord.
+**Description :** Niveau par défaut pour tous les membres du serveur Discord.
 
-**Acces :**
+**Accès :**
 - Commandes de consultation (status, liste)
 - Informations publiques
 - Statistiques personnelles
 
 **Attribution :**
 - Automatique pour tous les membres du serveur Discord
-- Aucun role specifique requis
+- Aucun rôle spécifique requis
 
 **Exemple d'utilisateur :**
 - Joueur lambda
@@ -84,20 +84,20 @@ Utilisateur Discord
 
 ### 2. MODERATOR (Niveau 1)
 
-**Description :** Moderateurs du serveur avec acces aux commandes de gestion des joueurs.
+**Description :** Modérateurs du serveur avec accès aux commandes de gestion des joueurs.
 
-**Acces :**
+**Accès :**
 - Toutes les permissions PLAYER
 - Kick de joueurs
 - Gestion de la whitelist
 - Messages serveur
-- Teleportation de joueurs
+- Téléportation de joueurs
 
 **Attribution :**
-- Role Discord configure dans `.env` : `DISCORD_MOD_ROLE_ID`
+- Rôle Discord configuré dans `.env` : `DISCORD_MOD_ROLE_ID`
 
 **Exemple d'utilisateur :**
-- Moderateur du serveur
+- Modérateur du serveur
 - Helper
 - Staff junior
 
@@ -105,19 +105,19 @@ Utilisateur Discord
 
 ### 3. ADMIN (Niveau 2)
 
-**Description :** Administrateurs avec acces complet aux commandes de gestion du serveur.
+**Description :** Administrateurs avec accès complet aux commandes de gestion du serveur.
 
-**Acces :**
+**Accès :**
 - Toutes les permissions MODERATOR
-- Demarrage/Arret du serveur
+- Démarrage/Arrêt du serveur
 - Bannissement de joueurs
 - Configuration des notifications
-- Acces console RCON
+- Accès console RCON
 - Gestion des backups
 - Administration du bot
 
 **Attribution :**
-- Role Discord configure dans `.env` : `DISCORD_ADMIN_ROLE_ID`
+- Rôle Discord configuré dans `.env` : `DISCORD_ADMIN_ROLE_ID`
 
 **Exemple d'utilisateur :**
 - Administrateur serveur
@@ -128,73 +128,73 @@ Utilisateur Discord
 
 ### 4. OWNER (Niveau 3)
 
-**Description :** Proprietaire du bot avec acces total sans restriction.
+**Description :** Propriétaire du bot avec accès total sans restriction.
 
-**Acces :**
+**Accès :**
 - Toutes les permissions ADMIN
-- Commandes systeme critiques
+- Commandes système critiques
 - Modification de la configuration
-- Acces aux logs sensibles
+- Accès aux logs sensibles
 - Bypass de toutes les restrictions
 
 **Attribution :**
-- Proprietaire du serveur Discord (automatique)
-- ID utilisateur configure dans `.env` : `BOT_OWNER_ID`
+- Propriétaire du serveur Discord (automatique)
+- ID utilisateur configuré dans `.env` : `BOT_OWNER_ID`
 
 **Exemple d'utilisateur :**
-- Proprietaire du serveur
-- Developpeur du bot
+- Propriétaire du serveur
+- Développeur du bot
 
-> **Attention :** Le niveau OWNER contourne toutes les verifications de permission. Utilisez-le avec precaution.
+> **Attention :** Le niveau OWNER contourne toutes les vérifications de permission. Utilisez-le avec précaution.
 
 ---
 
-## Configuration des roles Discord
+## Configuration des rôles Discord
 
-### Etape 1 : Creer les roles
+### Étape 1 : Créer les rôles
 
-Dans Discord, creez deux roles :
+Dans Discord, créez deux rôles :
 1. **Administrateur Minecraft** (pour les admins)
-2. **Moderateur Minecraft** (pour les moderateurs)
+2. **Modérateur Minecraft** (pour les modérateurs)
 
-### Etape 2 : Recuperer les IDs des roles
+### Étape 2 : Récupérer les IDs des rôles
 
-1. Activez le mode developpeur dans Discord
-   - Parametres > Avance > Mode developpeur
-2. Clic droit sur le role > "Copier l'identifiant"
+1. Activez le mode développeur dans Discord
+   - Paramètres > Avancé > Mode développeur
+2. Clic droit sur le rôle > "Copier l'identifiant"
 
-### Etape 3 : Configurer le fichier .env
+### Étape 3 : Configurer le fichier .env
 
 ```env
-# Roles Discord
+# Rôles Discord
 DISCORD_ADMIN_ROLE_ID=123456789012345678
 DISCORD_MOD_ROLE_ID=987654321098765432
 
-# Owner (optionnel, utilise l'owner du serveur par defaut)
+# Owner (optionnel, utilise l'owner du serveur par défaut)
 BOT_OWNER_ID=111222333444555666
 ```
 
-### Etape 4 : Redemarrer le bot
+### Étape 4 : Redémarrer le bot
 
 ```bash
 docker compose restart bot
 ```
 
-### Verification
+### Vérification
 
-Utilisez la commande suivante pour verifier vos permissions :
+Utilisez la commande suivante pour vérifier vos permissions :
 
 ```
 /admin permissions check
 ```
 
-**Reponse :**
+**Réponse :**
 ```
 Vos permissions
 
 Utilisateur: VotreNom#1234
 Niveau: ADMIN (2)
-Roles: @Administrateur Minecraft
+Rôles: @Administrateur Minecraft
 
 Commandes disponibles: 45/45
 ```
@@ -208,7 +208,7 @@ Commandes disponibles: 45/45
 | Commande | Description |
 |----------|-------------|
 | `/server status` | Voir le statut du serveur |
-| `/players list` | Liste des joueurs connectes |
+| `/players list` | Liste des joueurs connectés |
 | `/players info [player]` | Informations sur un joueur |
 | `/players whitelist list` | Voir la whitelist |
 | `/monitoring stats` | Statistiques de performance |
@@ -218,32 +218,32 @@ Commandes disponibles: 45/45
 | Commande | Description |
 |----------|-------------|
 | `/players kick [player] [reason]` | Expulser un joueur |
-| `/players whitelist add [player]` | Ajouter a la whitelist |
+| `/players whitelist add [player]` | Ajouter à la whitelist |
 | `/players whitelist remove [player]` | Retirer de la whitelist |
 | `/rcon say [message]` | Message serveur |
-| `/rcon tp [player] [target]` | Teleporter un joueur |
+| `/rcon tp [player] [target]` | Téléporter un joueur |
 | `/monitoring alerts` | Voir les alertes |
 
 ### ADMIN (Niveau 2)
 
 | Commande | Description |
 |----------|-------------|
-| `/server start` | Demarrer le serveur |
-| `/server stop [delay] [reason]` | Arreter le serveur |
-| `/server restart [delay] [reason]` | Redemarrer le serveur |
-| `/server backup [type]` | Creer une sauvegarde |
-| `/server console [command]` | Executer une commande console |
+| `/server start` | Démarrer le serveur |
+| `/server stop [delay] [reason]` | Arrêter le serveur |
+| `/server restart [delay] [reason]` | Redémarrer le serveur |
+| `/server backup [type]` | Créer une sauvegarde |
+| `/server console [command]` | Exécuter une commande console |
 | `/players ban [player] [reason] [duration]` | Bannir un joueur |
 | `/players unban [player]` | Lever un bannissement |
 | `/rcon execute [command]` | Commande RCON brute |
 | `/rcon give [player] [item] [amount]` | Donner des objets |
 | `/rcon gamemode [player] [mode]` | Changer le mode de jeu |
 | `/rcon time [value]` | Modifier l'heure |
-| `/rcon weather [type]` | Modifier la meteo |
+| `/rcon weather [type]` | Modifier la météo |
 | `/notifications configure` | Configurer les notifications |
-| `/notifications toggle [type] [enabled]` | Activer/desactiver |
+| `/notifications toggle [type] [enabled]` | Activer/désactiver |
 | `/notifications test [type]` | Tester une notification |
-| `/monitoring report [period]` | Generer un rapport |
+| `/monitoring report [period]` | Générer un rapport |
 | `/admin sync` | Synchroniser les commandes |
 | `/admin logs [lines] [level]` | Voir les logs |
 | `/admin reload` | Recharger la config |
@@ -252,34 +252,34 @@ Commandes disponibles: 45/45
 
 | Commande | Description |
 |----------|-------------|
-| `/admin shutdown` | Arreter completement le bot |
-| `/admin eval [code]` | Executer du code Python |
+| `/admin shutdown` | Arrêter complètement le bot |
+| `/admin eval [code]` | Exécuter du code Python |
 | `/admin config set [key] [value]` | Modifier la configuration |
 | `/admin permissions override` | Outrepasser les permissions |
 
-> **Attention :** Les commandes OWNER sont dangereuses et ne doivent etre utilisees qu'en cas de necessite absolue.
+> **Attention :** Les commandes OWNER sont dangereuses et ne doivent être utilisées qu'en cas de nécessité absolue.
 
 ---
 
-## Permissions speciales
+## Permissions spéciales
 
 ### Permissions Discord natives
 
-Certaines commandes verifient aussi les permissions Discord natives :
+Certaines commandes vérifient aussi les permissions Discord natives :
 
 | Permission Discord | Effet |
 |-------------------|-------|
-| `Administrator` | Equivalent a ADMIN |
-| `Manage Server` | Acces aux commandes serveur |
+| `Administrator` | Équivalent à ADMIN |
+| `Manage Server` | Accès aux commandes serveur |
 | `Manage Messages` | Peut supprimer des messages du bot |
 | `Mention Everyone` | Peut utiliser @everyone dans les commandes |
 
 ### Permissions par channel
 
-Vous pouvez restreindre certaines commandes a des channels specifiques :
+Vous pouvez restreindre certaines commandes à des channels spécifiques :
 
 ```env
-# Channels autorises pour les commandes admin
+# Channels autorisés pour les commandes admin
 ADMIN_COMMAND_CHANNELS=123456789,987654321
 
 # Channel unique pour les commandes sensibles
@@ -288,21 +288,21 @@ SENSITIVE_COMMAND_CHANNEL=111222333444555666
 
 ### Permissions temporaires
 
-Le systeme supporte les permissions temporaires :
+Le système supporte les permissions temporaires :
 
 ```
 /admin permissions grant user:@User level:MODERATOR duration:24h
 ```
 
-Apres 24 heures, l'utilisateur reviendra a son niveau d'origine.
+Après 24 heures, l'utilisateur reviendra à son niveau d'origine.
 
 ---
 
-## Configuration avancee
+## Configuration avancée
 
 ### Fichier de configuration des permissions
 
-Creez `config/permissions.json` pour une configuration plus fine :
+Créez `config/permissions.json` pour une configuration plus fine :
 
 ```json
 {
@@ -358,20 +358,20 @@ Creez `config/permissions.json` pour une configuration plus fine :
 }
 ```
 
-### Roles multiples
+### Rôles multiples
 
-Un utilisateur peut avoir plusieurs roles. Le niveau le plus eleve est utilise :
+Un utilisateur peut avoir plusieurs rôles. Le niveau le plus élevé est utilisé :
 
 ```
 Utilisateur: Steve#1234
-Roles: @Joueur, @Moderateur, @Administrateur
+Rôles: @Joueur, @Modérateur, @Administrateur
 
-Niveau effectif: ADMIN (le plus eleve)
+Niveau effectif: ADMIN (le plus élevé)
 ```
 
 ### Logs des permissions
 
-Toutes les verifications de permission sont loguees :
+Toutes les vérifications de permission sont loguées :
 
 ```
 [2024-01-15 14:32:15] [PERMISSION] User:Steve#1234 Command:/server stop Level:ADMIN Result:GRANTED
@@ -386,30 +386,30 @@ Consultez les logs avec :
 
 ---
 
-## Troubleshooting
+## Dépannage
 
-### "Permission refusee" alors que j'ai le bon role
+### "Permission refusée" alors que j'ai le bon rôle
 
 **Causes possibles :**
 
-1. **Le role n'est pas configure dans .env**
+1. **Le rôle n'est pas configuré dans .env**
    ```bash
-   # Verifier la configuration
+   # Vérifier la configuration
    cat .env | grep ROLE
    ```
 
-2. **L'ID du role est incorrect**
-   - Verifiez l'ID en faisant clic droit > Copier l'identifiant
+2. **L'ID du rôle est incorrect**
+   - Vérifiez l'ID en faisant clic droit > Copier l'identifiant
 
-3. **Le bot n'a pas redémarre apres la configuration**
+3. **Le bot n'a pas redémarré après la configuration**
    ```bash
    docker compose restart bot
    ```
 
-4. **Hierarchie des roles Discord**
-   - Le role du bot doit etre au-dessus des roles qu'il gere
+4. **Hiérarchie des rôles Discord**
+   - Le rôle du bot doit être au-dessus des rôles qu'il gère
 
-### Le proprietaire du serveur n'a pas les permissions OWNER
+### Le propriétaire du serveur n'a pas les permissions OWNER
 
 **Solution :**
 
@@ -421,7 +421,7 @@ BOT_OWNER_ID=votre-user-id
 
 ### Les commandes ne s'affichent pas
 
-**Cause :** Les commandes slash ne sont pas synchronisees.
+**Cause :** Les commandes slash ne sont pas synchronisées.
 
 **Solution :**
 
@@ -429,7 +429,7 @@ BOT_OWNER_ID=votre-user-id
 /admin sync
 ```
 
-Ou redemarrez le bot :
+Ou redémarrez le bot :
 
 ```bash
 docker compose restart bot
@@ -437,9 +437,9 @@ docker compose restart bot
 
 ### Un utilisateur a trop de permissions
 
-**Solution :** Verifiez ses roles Discord et retirez les roles inappropries.
+**Solution :** Vérifiez ses rôles Discord et retirez les rôles inappropriés.
 
-Pour verifier les permissions d'un utilisateur :
+Pour vérifier les permissions d'un utilisateur :
 
 ```
 /admin permissions check user:@Utilisateur
@@ -451,5 +451,5 @@ Pour verifier les permissions d'un utilisateur :
 
 - [Commandes du bot](commands.md)
 - [Notifications](notifications.md)
-- [Configuration generale](../configuration.md)
-- [Troubleshooting](../troubleshooting.md)
+- [Configuration générale](../configuration.md)
+- [Dépannage](../troubleshooting.md)

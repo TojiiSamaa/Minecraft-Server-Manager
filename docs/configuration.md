@@ -1,13 +1,13 @@
 # Guide de configuration
 
-Ce guide detaille toutes les variables d'environnement disponibles et leur utilisation.
+Ce guide détaille toutes les variables d'environnement disponibles et leur utilisation.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Structure du fichier .env](#structure-du-fichier-env)
-- [Variables generales](#variables-generales)
+- [Variables générales](#variables-générales)
 - [Configuration Discord](#configuration-discord)
 - [Configuration Minecraft](#configuration-minecraft)
 - [Configuration PostgreSQL](#configuration-postgresql)
@@ -15,25 +15,25 @@ Ce guide detaille toutes les variables d'environnement disponibles et leur utili
 - [Configuration Web/NextAuth](#configuration-webnextauth)
 - [Configuration Backup](#configuration-backup)
 - [Configuration Monitoring](#configuration-monitoring)
-- [Exemple complet commente](#exemple-complet-commente)
-- [Configuration avancee](#configuration-avancee)
+- [Exemple complet commenté](#exemple-complet-commenté)
+- [Configuration avancée](#configuration-avancée)
 
 ---
 
 ## Structure du fichier .env
 
-Le fichier `.env` se trouve a la racine du projet et contient toutes les configurations sensibles.
+Le fichier `.env` se trouve à la racine du projet et contient toutes les configurations sensibles.
 
 > **ATTENTION** : Ne jamais commiter le fichier `.env` dans Git !
 
 ---
 
-## Variables generales
+## Variables générales
 
-| Variable | Description | Valeurs possibles | Defaut |
+| Variable | Description | Valeurs possibles | Défaut |
 |----------|-------------|-------------------|--------|
-| `PROJECT_NAME` | Nom du projet | Chaine de caracteres | `MinecraftBot` |
-| `NODE_ENV` | Environnement d'execution | `development`, `staging`, `production` | `production` |
+| `PROJECT_NAME` | Nom du projet | Chaîne de caractères | `MinecraftBot` |
+| `NODE_ENV` | Environnement d'exécution | `development`, `staging`, `production` | `production` |
 | `TZ` | Fuseau horaire | Format `Region/City` | `Europe/Paris` |
 | `LOG_LEVEL` | Niveau de log | `debug`, `info`, `warn`, `error` | `info` |
 | `DOMAIN` | Domaine principal | URL ou domaine | `localhost` |
@@ -54,7 +54,7 @@ DOMAIN=monserveur.fr
 
 ### Variables requises
 
-| Variable | Description | Ou trouver |
+| Variable | Description | Où trouver |
 |----------|-------------|------------|
 | `DISCORD_TOKEN` | Token du bot | Developer Portal > Bot > Token |
 | `DISCORD_GUILD_ID` | ID du serveur principal | Clic droit sur le serveur |
@@ -63,11 +63,11 @@ DOMAIN=monserveur.fr
 
 ### Variables optionnelles
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
-| `DISCORD_PREFIX` | Prefixe des commandes textuelles | `!` |
-| `DISCORD_ADMIN_ROLE_ID` | ID du role administrateur | - |
-| `DISCORD_MOD_ROLE_ID` | ID du role moderateur | - |
+| `DISCORD_PREFIX` | Préfixe des commandes textuelles | `!` |
+| `DISCORD_ADMIN_ROLE_ID` | ID du rôle administrateur | - |
+| `DISCORD_MOD_ROLE_ID` | ID du rôle modérateur | - |
 | `DISCORD_LOG_CHANNEL_ID` | Channel pour les logs du bot | - |
 | `DISCORD_STATUS_CHANNEL_ID` | Channel pour le statut serveur | - |
 | `DISCORD_CHAT_CHANNEL_ID` | Channel pour le bridge chat | - |
@@ -81,7 +81,7 @@ DISCORD_GUILD_ID=123456789012345678
 DISCORD_CLIENT_ID=123456789012345678
 DISCORD_CLIENT_SECRET=abcdefghijklmnopqrstuvwxyz123456
 
-# Discord - Roles
+# Discord - Rôles
 DISCORD_ADMIN_ROLE_ID=123456789012345678
 DISCORD_MOD_ROLE_ID=123456789012345678
 
@@ -98,7 +98,7 @@ DISCORD_PREFIX=!
 
 ### Serveur
 
-| Variable | Description | Valeurs | Defaut |
+| Variable | Description | Valeurs | Défaut |
 |----------|-------------|---------|--------|
 | `MINECRAFT_VERSION` | Version du serveur | `1.20.4`, `1.21`, `latest` | `1.20.4` |
 | `MINECRAFT_TYPE` | Type de serveur | `VANILLA`, `PAPER`, `SPIGOT`, `FABRIC`, `FORGE`, `NEOFORGE` | `PAPER` |
@@ -109,21 +109,21 @@ DISCORD_PREFIX=!
 
 ### RCON (Remote Console)
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
-| `RCON_HOST` | Hote RCON (nom du conteneur) | `minecraft` |
+| `RCON_HOST` | Hôte RCON (nom du conteneur) | `minecraft` |
 | `RCON_PORT` | Port RCON | `25575` |
-| `RCON_PASSWORD` | Mot de passe RCON | Genere automatiquement |
+| `RCON_PASSWORD` | Mot de passe RCON | Généré automatiquement |
 | `RCON_TIMEOUT` | Timeout en secondes | `5.0` |
 
-### Parametres du jeu
+### Paramètres du jeu
 
-| Variable | Description | Valeurs | Defaut |
+| Variable | Description | Valeurs | Défaut |
 |----------|-------------|---------|--------|
 | `MINECRAFT_MOTD` | Message du jour | Texte | `Welcome!` |
 | `MINECRAFT_GAMEMODE` | Mode de jeu | `survival`, `creative`, `adventure`, `spectator` | `survival` |
-| `MINECRAFT_DIFFICULTY` | Difficulte | `peaceful`, `easy`, `normal`, `hard` | `normal` |
-| `MINECRAFT_ONLINE_MODE` | Verification Mojang | `true`, `false` | `true` |
+| `MINECRAFT_DIFFICULTY` | Difficulté | `peaceful`, `easy`, `normal`, `hard` | `normal` |
+| `MINECRAFT_ONLINE_MODE` | Vérification Mojang | `true`, `false` | `true` |
 | `MINECRAFT_PVP` | Combat entre joueurs | `true`, `false` | `true` |
 | `MINECRAFT_VIEW_DISTANCE` | Distance de rendu (chunks) | 2-32 | `10` |
 
@@ -143,7 +143,7 @@ RCON_HOST=minecraft
 RCON_PORT=25575
 RCON_PASSWORD=VotreMotDePasseSecurise123
 
-# Game Settings
+# Paramètres du jeu
 MINECRAFT_MOTD=Bienvenue sur MonServeur!
 MINECRAFT_GAMEMODE=survival
 MINECRAFT_DIFFICULTY=normal
@@ -156,14 +156,14 @@ MINECRAFT_VIEW_DISTANCE=10
 
 ## Configuration PostgreSQL
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
-| `POSTGRES_HOST` | Hote (nom du conteneur) | `db` |
+| `POSTGRES_HOST` | Hôte (nom du conteneur) | `db` |
 | `POSTGRES_PORT` | Port | `5432` |
 | `POSTGRES_DB` | Nom de la base | `minecraft_db` |
 | `POSTGRES_USER` | Utilisateur | `minecraft_user` |
-| `POSTGRES_PASSWORD` | Mot de passe | Genere automatiquement |
-| `DATABASE_URL` | URL complete | Auto-construite |
+| `POSTGRES_PASSWORD` | Mot de passe | Généré automatiquement |
+| `DATABASE_URL` | URL complète | Auto-construite |
 | `POSTGRES_MAX_CONNECTIONS` | Connexions max | `100` |
 
 ### Exemple
@@ -182,14 +182,14 @@ DATABASE_URL=postgresql://minecraft_user:MotDePassePostgres123@db:5432/minecraft
 
 ## Configuration Redis
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
-| `REDIS_HOST` | Hote (nom du conteneur) | `redis` |
+| `REDIS_HOST` | Hôte (nom du conteneur) | `redis` |
 | `REDIS_PORT` | Port | `6379` |
-| `REDIS_PASSWORD` | Mot de passe | Genere automatiquement |
-| `REDIS_URL` | URL complete | Auto-construite |
-| `REDIS_MAXMEMORY` | Memoire maximale | `256mb` |
-| `REDIS_MAXMEMORY_POLICY` | Politique d'eviction | `allkeys-lru` |
+| `REDIS_PASSWORD` | Mot de passe | Généré automatiquement |
+| `REDIS_URL` | URL complète | Auto-construite |
+| `REDIS_MAXMEMORY` | Mémoire maximale | `256mb` |
+| `REDIS_MAXMEMORY_POLICY` | Politique d'éviction | `allkeys-lru` |
 
 ### Exemple
 
@@ -209,10 +209,10 @@ REDIS_MAXMEMORY=256mb
 | Variable | Description | Exemple |
 |----------|-------------|---------|
 | `NEXTAUTH_URL` | URL du panel web | `http://localhost:3000` |
-| `NEXTAUTH_SECRET` | Secret pour les sessions | Genere avec `openssl rand -base64 32` |
+| `NEXTAUTH_SECRET` | Secret pour les sessions | Généré avec `openssl rand -base64 32` |
 | `WEB_PORT` | Port du panel | `3000` |
-| `SESSION_MAX_AGE` | Duree de session (secondes) | `604800` (7 jours) |
-| `INTERNAL_API_KEY` | Cle API interne | Genere automatiquement |
+| `SESSION_MAX_AGE` | Durée de session (secondes) | `604800` (7 jours) |
+| `INTERNAL_API_KEY` | Clé API interne | Généré automatiquement |
 
 ### Exemple
 
@@ -229,11 +229,11 @@ INTERNAL_API_KEY=abcdef1234567890abcdef1234567890
 
 ## Configuration Backup
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
 | `BACKUP_ENABLED` | Activer les backups | `true` |
 | `BACKUP_INTERVAL` | Intervalle en heures | `6` |
-| `BACKUP_RETENTION` | Nombre de backups a garder | `10` |
+| `BACKUP_RETENTION` | Nombre de backups à garder | `10` |
 | `BACKUP_PATH` | Chemin de stockage | `./backups` |
 | `BACKUP_COMPRESSION` | Compresser les backups | `true` |
 | `BACKUP_INCLUDE_DATABASE` | Inclure la BDD | `true` |
@@ -245,9 +245,9 @@ INTERNAL_API_KEY=abcdef1234567890abcdef1234567890
 |----------|-------------|
 | `BACKUP_REMOTE_TYPE` | `s3`, `gcs`, `azure`, `none` |
 | `BACKUP_REMOTE_BUCKET` | Nom du bucket |
-| `BACKUP_REMOTE_REGION` | Region cloud |
-| `BACKUP_REMOTE_ACCESS_KEY` | Cle d'acces |
-| `BACKUP_REMOTE_SECRET_KEY` | Cle secrete |
+| `BACKUP_REMOTE_REGION` | Région cloud |
+| `BACKUP_REMOTE_ACCESS_KEY` | Clé d'accès |
+| `BACKUP_REMOTE_SECRET_KEY` | Clé secrète |
 
 ### Exemple
 
@@ -268,7 +268,7 @@ BACKUP_DISCORD_NOTIFY=true
 
 ### Seuils d'alerte
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
 | `MONITORING_ENABLED` | Activer le monitoring | `true` |
 | `MONITORING_INTERVAL` | Intervalle (secondes) | `30` |
@@ -296,23 +296,23 @@ MONITORING_ALERT_CHANNEL_ID=123456789012345678
 
 ---
 
-## Exemple complet commente
+## Exemple complet commenté
 
 ```env
 # ============================================================================
-# CONFIGURATION COMPLETE DU PROJET
+# CONFIGURATION COMPLÈTE DU PROJET
 # ============================================================================
 
 # ----------------------------------------------------------------------------
-# SECTION 1: GENERAL
+# SECTION 1: GÉNÉRAL
 # ----------------------------------------------------------------------------
 
-# Nom du projet (utilise pour les conteneurs Docker, logs, etc.)
+# Nom du projet (utilisé pour les conteneurs Docker, logs, etc.)
 PROJECT_NAME=MonServeur
 
-# Environnement d'execution
-# development: logs verbeux, hot-reload active
-# production: optimisations activees, logs minimaux
+# Environnement d'exécution
+# development: logs verbeux, hot-reload activé
+# production: optimisations activées, logs minimaux
 NODE_ENV=production
 
 # Fuseau horaire du serveur
@@ -339,13 +339,13 @@ DISCORD_CLIENT_ID=123456789012345678
 # Secret client pour OAuth2
 DISCORD_CLIENT_SECRET=abcdefghijklmnopqrstuvwxyz123456
 
-# ID du role administrateur
+# ID du rôle administrateur
 DISCORD_ADMIN_ROLE_ID=123456789012345678
 
-# ID du role moderateur
+# ID du rôle modérateur
 DISCORD_MOD_ROLE_ID=123456789012345678
 
-# Prefixe des commandes textuelles
+# Préfixe des commandes textuelles
 DISCORD_PREFIX=!
 
 # Channels Discord
@@ -371,11 +371,11 @@ RCON_PASSWORD=MotDePasseRCON123456789
 # Port du serveur
 MINECRAFT_PORT=25565
 
-# Memoire RAM
+# Mémoire RAM
 MINECRAFT_MEMORY_MIN=2G
 MINECRAFT_MEMORY_MAX=4G
 
-# Parametres du jeu
+# Paramètres du jeu
 MINECRAFT_MAX_PLAYERS=20
 MINECRAFT_MOTD=Bienvenue sur MonServeur!
 MINECRAFT_GAMEMODE=survival
@@ -438,18 +438,18 @@ ALERT_RAM_CRITICAL=90
 
 ---
 
-## Configuration avancee
+## Configuration avancée
 
 ### Variables d'environnement multiples
 
-Vous pouvez creer des fichiers `.env` par environnement :
+Vous pouvez créer des fichiers `.env` par environnement :
 - `.env.development`
 - `.env.staging`
 - `.env.production`
 
 ### Surcharge avec docker-compose.override.yml
 
-Creez un fichier `docker-compose.override.yml` pour surcharger la configuration par defaut :
+Créez un fichier `docker-compose.override.yml` pour surcharger la configuration par défaut :
 
 ```yaml
 version: "3.9"
@@ -459,12 +459,12 @@ services:
     environment:
       MEMORY: 8G
     ports:
-      - "25566:25565"  # Port different
+      - "25566:25565"  # Port différent
 ```
 
-### Variables secretes avec Docker Secrets
+### Variables secrètes avec Docker Secrets
 
-Pour plus de securite en production :
+Pour plus de sécurité en production :
 
 ```yaml
 services:
@@ -486,4 +486,4 @@ secrets:
 
 - [Installation](installation.md)
 - [Services Docker](docker/services.md)
-- [Troubleshooting](docker/troubleshooting.md)
+- [Dépannage](docker/troubleshooting.md)

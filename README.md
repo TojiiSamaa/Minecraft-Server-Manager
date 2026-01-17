@@ -1,166 +1,166 @@
-# Minecraft Server Manager
+# Gestionnaire de Serveur Minecraft
 
-A complete solution to manage a Minecraft server with a Discord bot, web dashboard, and Docker infrastructure.
+Une solution complète pour gérer un serveur Minecraft avec un bot Discord, un tableau de bord web et une infrastructure Docker.
 
-## Features
+## Fonctionnalités
 
-### Discord Bot (Python)
-- **Server Control**: Start, stop, restart via Discord commands
-- **RCON Commands**: Execute Minecraft commands directly from Discord
-- **Player Management**: Whitelist, bans, operators, teleportation
-- **Real-time Monitoring**: TPS, RAM, CPU with alerts
-- **Notifications**: Player joins/leaves, deaths, achievements, chat relay
-- **Logging**: Complete audit system with Discord + files + database
+### Bot Discord (Python)
+- **Contrôle du serveur** : Démarrer, arrêter, redémarrer via des commandes Discord
+- **Commandes RCON** : Exécuter des commandes Minecraft directement depuis Discord
+- **Gestion des joueurs** : Liste blanche, bannissements, opérateurs, téléportation
+- **Surveillance en temps réel** : TPS, RAM, CPU avec alertes
+- **Notifications** : Connexions/déconnexions des joueurs, morts, succès, relais du chat
+- **Journalisation** : Système d'audit complet avec Discord + fichiers + base de données
 
-### Web Dashboard (Next.js)
-- **Discord OAuth**: Secure authentication via Discord
-- **Server Management**: Visual control panel
-- **Live Console**: Real-time server logs
-- **Configuration Editor**: Edit server.properties from the web
-- **Backup Management**: Create, list, restore backups
+### Tableau de bord web (Next.js)
+- **OAuth Discord** : Authentification sécurisée via Discord
+- **Gestion du serveur** : Panneau de contrôle visuel
+- **Console en direct** : Journaux du serveur en temps réel
+- **Éditeur de configuration** : Modifier server.properties depuis le web
+- **Gestion des sauvegardes** : Créer, lister, restaurer des sauvegardes
 
 ### Infrastructure (Docker)
-- **Minecraft Server**: NeoForge/Forge support for mods
-- **PostgreSQL**: Persistent data storage
-- **Redis**: Caching and pub/sub
-- **Isolated Networks**: Secure by default
+- **Serveur Minecraft** : Support NeoForge/Forge pour les mods
+- **PostgreSQL** : Stockage persistant des données
+- **Redis** : Cache et pub/sub
+- **Réseaux isolés** : Sécurisé par défaut
 
-## Quick Start
+## Démarrage rapide
 
-### Prerequisites
+### Prérequis
 - Docker & Docker Compose v2
 - Git
-- Discord Bot Token ([Discord Developer Portal](https://discord.com/developers/applications))
+- Jeton de bot Discord ([Portail développeur Discord](https://discord.com/developers/applications))
 
 ### Installation
 
 **Windows (PowerShell)**
 ```powershell
-cd C:\path\to\project
+cd C:\chemin\vers\projet
 .\setup.ps1
 ```
 
 **Linux/macOS (Bash)**
 ```bash
-cd /path/to/project
+cd /chemin/vers/projet
 chmod +x setup.sh
 ./setup.sh
 ```
 
-The setup script will:
-1. Check and install dependencies automatically
-2. Ask for your project name and Discord credentials
-3. Generate secure passwords (RCON, PostgreSQL, Redis, etc.)
-4. Create all configuration files
-5. Verify the installation
+Le script d'installation va :
+1. Vérifier et installer les dépendances automatiquement
+2. Demander le nom de votre projet et vos identifiants Discord
+3. Générer des mots de passe sécurisés (RCON, PostgreSQL, Redis, etc.)
+4. Créer tous les fichiers de configuration
+5. Vérifier l'installation
 
-### Launch
+### Lancement
 
 ```bash
 docker compose up -d
 ```
 
-## Project Structure
+## Structure du projet
 
 ```
-├── bot/                    # Discord bot (Python)
+├── bot/                    # Bot Discord (Python)
 │   ├── src/
-│   │   ├── core/          # Bot core (bot.py, rcon_client.py, etc.)
-│   │   ├── cogs/          # Commands (server, rcon, players, etc.)
-│   │   └── utils/         # Utilities (validators, permissions, etc.)
+│   │   ├── core/          # Cœur du bot (bot.py, rcon_client.py, etc.)
+│   │   ├── cogs/          # Commandes (serveur, rcon, joueurs, etc.)
+│   │   └── utils/         # Utilitaires (validateurs, permissions, etc.)
 │   ├── Dockerfile
 │   └── requirements.txt
-├── web/                    # Web dashboard (Next.js)
+├── web/                    # Tableau de bord web (Next.js)
 │   ├── src/
-│   │   ├── app/           # Next.js App Router
-│   │   ├── components/    # React components
-│   │   └── lib/           # Utilities
+│   │   ├── app/           # Routeur App Next.js
+│   │   ├── components/    # Composants React
+│   │   └── lib/           # Utilitaires
 │   ├── Dockerfile
 │   └── package.json
-├── database/              # PostgreSQL initialization
-│   └── init/              # SQL scripts (01-init, 02-tables, etc.)
-├── minecraft/             # Minecraft server data
-│   ├── mods/              # NeoForge mods
-│   └── config/            # Server configuration
-├── templates/             # Configuration templates
-├── docs/                  # Complete documentation
-├── logs/                  # Application logs
-├── backups/               # Server backups
-├── docker-compose.yml     # Production configuration
-└── .env                   # Environment variables
+├── database/              # Initialisation PostgreSQL
+│   └── init/              # Scripts SQL (01-init, 02-tables, etc.)
+├── minecraft/             # Données du serveur Minecraft
+│   ├── mods/              # Mods NeoForge
+│   └── config/            # Configuration du serveur
+├── templates/             # Modèles de configuration
+├── docs/                  # Documentation complète
+├── logs/                  # Journaux de l'application
+├── backups/               # Sauvegardes du serveur
+├── docker-compose.yml     # Configuration de production
+└── .env                   # Variables d'environnement
 ```
 
 ## Configuration
 
-All configuration is done via environment variables in `.env`:
+Toute la configuration se fait via les variables d'environnement dans `.env` :
 
 | Variable | Description |
 |----------|-------------|
-| `PROJECT_NAME` | Your project name |
-| `DISCORD_TOKEN` | Discord bot token |
-| `DISCORD_GUILD_ID` | Your Discord server ID |
-| `RCON_PASSWORD` | Auto-generated RCON password |
-| `POSTGRES_PASSWORD` | Auto-generated database password |
+| `PROJECT_NAME` | Le nom de votre projet |
+| `DISCORD_TOKEN` | Jeton du bot Discord |
+| `DISCORD_GUILD_ID` | ID de votre serveur Discord |
+| `RCON_PASSWORD` | Mot de passe RCON généré automatiquement |
+| `POSTGRES_PASSWORD` | Mot de passe de la base de données généré automatiquement |
 
-See [docs/configuration.md](docs/configuration.md) for the complete list.
+Voir [docs/configuration.md](docs/configuration.md) pour la liste complète.
 
-## Discord Commands
+## Commandes Discord
 
-| Command | Description | Permission |
-|---------|-------------|------------|
-| `/server status` | Server status | Everyone |
-| `/server start` | Start server | Admin |
-| `/server stop` | Stop server | Admin |
-| `/rcon execute <cmd>` | RCON command | Owner |
-| `/players list` | Online players | Everyone |
-| `/whitelist add <player>` | Add to whitelist | Admin |
-| `/ban <player>` | Ban a player | Moderator |
-| `/stats` | TPS/RAM/CPU stats | Everyone |
-| `/logs view` | View recent logs | Moderator |
-| `/notifications configure` | Setup notifications | Admin |
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/server status` | État du serveur | Tout le monde |
+| `/server start` | Démarrer le serveur | Admin |
+| `/server stop` | Arrêter le serveur | Admin |
+| `/rcon execute <cmd>` | Commande RCON | Propriétaire |
+| `/players list` | Joueurs en ligne | Tout le monde |
+| `/whitelist add <joueur>` | Ajouter à la liste blanche | Admin |
+| `/ban <joueur>` | Bannir un joueur | Modérateur |
+| `/stats` | Statistiques TPS/RAM/CPU | Tout le monde |
+| `/logs view` | Voir les journaux récents | Modérateur |
+| `/notifications configure` | Configurer les notifications | Admin |
 
-See [docs/bot/commands.md](docs/bot/commands.md) for all commands.
+Voir [docs/bot/commands.md](docs/bot/commands.md) pour toutes les commandes.
 
-## Security
+## Sécurité
 
-This project includes several security measures:
+Ce projet inclut plusieurs mesures de sécurité :
 
-- **Input Validation**: All RCON inputs are validated and sanitized
-- **Role-based Permissions**: Discord role IDs for access control
-- **Network Isolation**: Internal Docker network for databases
-- **SQL Roles**: PostgreSQL roles with minimal privileges
-- **Sensitive Data Masking**: Passwords hidden in logs
-- **Resource Limits**: CPU/RAM limits on all containers
+- **Validation des entrées** : Toutes les entrées RCON sont validées et assainies
+- **Permissions basées sur les rôles** : ID des rôles Discord pour le contrôle d'accès
+- **Isolation réseau** : Réseau Docker interne pour les bases de données
+- **Rôles SQL** : Rôles PostgreSQL avec privilèges minimaux
+- **Masquage des données sensibles** : Mots de passe cachés dans les journaux
+- **Limites de ressources** : Limites CPU/RAM sur tous les conteneurs
 
 ## Documentation
 
-Complete documentation is available in the [docs/](docs/) folder:
+La documentation complète est disponible dans le dossier [docs/](docs/) :
 
-- [Installation Guide](docs/installation.md)
-- [Configuration Reference](docs/configuration.md)
-- [Bot Commands](docs/bot/commands.md)
-- [Permissions System](docs/bot/permissions.md)
+- [Guide d'installation](docs/installation.md)
+- [Référence de configuration](docs/configuration.md)
+- [Commandes du bot](docs/bot/commands.md)
+- [Système de permissions](docs/bot/permissions.md)
 - [Notifications](docs/bot/notifications.md)
-- [Docker Services](docs/docker/services.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [Services Docker](docs/docker/services.md)
+- [Dépannage](docs/troubleshooting.md)
 
-## Development
+## Développement
 
 ```bash
-# Start in development mode
+# Démarrer en mode développement
 docker compose -f docker-compose.yml -f docker-compose.override.yml up
 
-# Access services
-# - Web Dashboard: http://localhost:3000
-# - Adminer (DB): http://localhost:8080
-# - Redis Commander: http://localhost:8081
-# - Minecraft: localhost:25565
+# Accéder aux services
+# - Tableau de bord web : http://localhost:3000
+# - Adminer (BDD) : http://localhost:8080
+# - Redis Commander : http://localhost:8081
+# - Minecraft : localhost:25565
 ```
 
-## Contributing
+## Contribution
 
-Contributions are welcome! Please read the documentation before submitting a PR.
+Les contributions sont les bienvenues ! Veuillez lire la documentation avant de soumettre une PR.
 
-## License
+## Licence
 
-MIT License - See [LICENSE](LICENSE) for details.
+Licence MIT - Voir [LICENSE](LICENSE) pour plus de détails.

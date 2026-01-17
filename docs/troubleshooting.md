@@ -1,87 +1,87 @@
-# Guide de Depannage
+# Guide de Dépannage
 
-Solutions aux problemes courants du projet Minecraft Server Manager.
+Solutions aux problèmes courants du projet Minecraft Server Manager.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Erreurs courantes](#erreurs-courantes)
-- [Docker ne demarre pas](#docker-ne-demarre-pas)
+- [Docker ne démarre pas](#docker-ne-démarre-pas)
 - [Bot ne se connecte pas](#bot-ne-se-connecte-pas)
 - [RCON timeout](#rcon-timeout)
-- [Problemes de base de donnees](#problemes-de-base-de-donnees)
-- [Problemes du dashboard web](#problemes-du-dashboard-web)
-- [Problemes Minecraft](#problemes-minecraft)
-- [Problemes de performance](#problemes-de-performance)
+- [Problèmes de base de données](#problèmes-de-base-de-données)
+- [Problèmes du dashboard web](#problèmes-du-dashboard-web)
+- [Problèmes Minecraft](#problèmes-minecraft)
+- [Problèmes de performance](#problèmes-de-performance)
 - [Outils de diagnostic](#outils-de-diagnostic)
 
 ---
 
 ## Erreurs courantes
 
-### Tableau de reference rapide
+### Tableau de référence rapide
 
 | Erreur | Cause probable | Solution |
 |--------|----------------|----------|
-| `RCON timeout` | Serveur Minecraft hors ligne | Verifier le conteneur minecraft |
-| `Permission denied` | Role Discord mal configure | Verifier DISCORD_ADMIN_ROLE_ID |
-| `Database connection refused` | PostgreSQL non demarre | `docker compose up -d db` |
-| `Invalid token` | Token Discord incorrect | Verifier DISCORD_TOKEN |
-| `Port already in use` | Port occupe | Changer le port ou tuer le processus |
+| `RCON timeout` | Serveur Minecraft hors ligne | Vérifier le conteneur minecraft |
+| `Permission denied` | Rôle Discord mal configuré | Vérifier DISCORD_ADMIN_ROLE_ID |
+| `Database connection refused` | PostgreSQL non démarré | `docker compose up -d db` |
+| `Invalid token` | Token Discord incorrect | Vérifier DISCORD_TOKEN |
+| `Port already in use` | Port occupé | Changer le port ou tuer le processus |
 | `Out of memory` | RAM insuffisante | Augmenter MINECRAFT_MEMORY_MAX |
 
 ---
 
-## Docker ne demarre pas
+## Docker ne démarre pas
 
-### Symptome : Les conteneurs ne demarrent pas
+### Symptôme : Les conteneurs ne démarrent pas
 
 **Diagnostic :**
 
 ```bash
-# Verifier le statut de Docker
+# Vérifier le statut de Docker
 docker info
 
-# Verifier les conteneurs
+# Vérifier les conteneurs
 docker compose ps -a
 
-# Voir les logs de demarrage
+# Voir les logs de démarrage
 docker compose logs
 ```
 
 ### Erreur : "Cannot connect to Docker daemon"
 
-**Cause :** Le service Docker n'est pas demarre.
+**Cause :** Le service Docker n'est pas démarré.
 
 **Solution Windows :**
 
 ```powershell
-# Verifier le service
+# Vérifier le service
 Get-Service docker
 
-# Demarrer Docker Desktop
+# Démarrer Docker Desktop
 Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 
-# Attendre le demarrage (30-60 secondes)
+# Attendre le démarrage (30-60 secondes)
 ```
 
 **Solution Linux :**
 
 ```bash
-# Verifier le service
+# Vérifier le service
 sudo systemctl status docker
 
-# Demarrer Docker
+# Démarrer Docker
 sudo systemctl start docker
 
-# Activer au demarrage
+# Activer au démarrage
 sudo systemctl enable docker
 ```
 
 ### Erreur : "Bind for 0.0.0.0:25565 failed: port is already allocated"
 
-**Cause :** Le port est deja utilise par un autre processus.
+**Cause :** Le port est déjà utilisé par un autre processus.
 
 **Solution :**
 
@@ -107,30 +107,30 @@ MINECRAFT_PORT=25566
 **Solution :**
 
 ```bash
-# Verifier l'espace disque
+# Vérifier l'espace disque
 df -h
 
 # Nettoyer Docker
 docker system prune -af
 
-# Nettoyer les volumes non utilises
+# Nettoyer les volumes non utilisés
 docker volume prune -f
 
-# Nettoyer les images non utilisees
+# Nettoyer les images non utilisées
 docker image prune -af
 ```
 
 ### Erreur : "network minecraft-network not found"
 
-**Cause :** Le reseau Docker n'existe pas.
+**Cause :** Le réseau Docker n'existe pas.
 
 **Solution :**
 
 ```bash
-# Creer le reseau
+# Créer le réseau
 docker network create minecraft-network
 
-# OU recreer tous les services
+# OU recréer tous les services
 docker compose down
 docker compose up -d
 ```
@@ -139,7 +139,7 @@ docker compose up -d
 
 ## Bot ne se connecte pas
 
-### Symptome : Le bot n'apparait pas en ligne sur Discord
+### Symptôme : Le bot n'apparaît pas en ligne sur Discord
 
 **Diagnostic :**
 
@@ -147,28 +147,28 @@ docker compose up -d
 # Voir les logs du bot
 docker compose logs bot
 
-# Verifier que le conteneur tourne
+# Vérifier que le conteneur tourne
 docker compose ps bot
 ```
 
 ### Erreur : "Invalid token"
 
-**Cause :** Le token Discord est incorrect ou expire.
+**Cause :** Le token Discord est incorrect ou expiré.
 
 **Solution :**
 
 1. Allez sur le [Discord Developer Portal](https://discord.com/developers/applications)
-2. Selectionnez votre application
+2. Sélectionnez votre application
 3. Allez dans **Bot**
 4. Cliquez sur **Reset Token**
 5. Copiez le nouveau token
-6. Mettez a jour `.env` :
+6. Mettez à jour `.env` :
 
 ```env
 DISCORD_TOKEN=nouveau_token_ici
 ```
 
-7. Redemarrez le bot :
+7. Redémarrez le bot :
 
 ```bash
 docker compose restart bot
@@ -176,32 +176,32 @@ docker compose restart bot
 
 ### Erreur : "Privileged intents required"
 
-**Cause :** Les intents privilegies ne sont pas actives.
+**Cause :** Les intents privilégiés ne sont pas activés.
 
 **Solution :**
 
 1. Allez sur le Discord Developer Portal
-2. Selectionnez votre application > **Bot**
+2. Sélectionnez votre application > **Bot**
 3. Activez :
    - **Presence Intent**
    - **Server Members Intent**
    - **Message Content Intent**
-4. Sauvegardez et redemarrez le bot
+4. Sauvegardez et redémarrez le bot
 
 ### Erreur : "Missing Access"
 
-**Cause :** Le bot n'a pas les permissions necessaires.
+**Cause :** Le bot n'a pas les permissions nécessaires.
 
 **Solution :**
 
-1. Reinvitez le bot avec les bonnes permissions :
+1. Réinvitez le bot avec les bonnes permissions :
    - Send Messages
    - Embed Links
    - Read Message History
    - Use Slash Commands
    - Manage Messages (optionnel)
 
-2. URL de reinvitation :
+2. URL de réinvitation :
 
 ```
 https://discord.com/api/oauth2/authorize?client_id=VOTRE_CLIENT_ID&permissions=274878221376&scope=bot%20applications.commands
@@ -209,18 +209,18 @@ https://discord.com/api/oauth2/authorize?client_id=VOTRE_CLIENT_ID&permissions=2
 
 ### Erreur : "Guild not found" ou commandes non visibles
 
-**Cause :** Le Guild ID est incorrect ou les commandes ne sont pas synchronisees.
+**Cause :** Le Guild ID est incorrect ou les commandes ne sont pas synchronisées.
 
 **Solution :**
 
-1. Verifiez le DISCORD_GUILD_ID dans `.env`
+1. Vérifiez le DISCORD_GUILD_ID dans `.env`
 2. Synchronisez les commandes :
 
 ```
 /admin sync
 ```
 
-ou redemarrez le bot :
+ou redémarrez le bot :
 
 ```bash
 docker compose restart bot
@@ -230,27 +230,27 @@ docker compose restart bot
 
 ## RCON timeout
 
-### Symptome : Erreur "RCON connection timeout" dans les logs
+### Symptôme : Erreur "RCON connection timeout" dans les logs
 
 **Diagnostic :**
 
 ```bash
-# Verifier que le serveur Minecraft est demarre
+# Vérifier que le serveur Minecraft est démarré
 docker compose ps minecraft
 
 # Tester la connexion RCON manuellement
 docker compose exec minecraft rcon-cli list
 ```
 
-### Cause 1 : Serveur Minecraft non demarre
+### Cause 1 : Serveur Minecraft non démarré
 
 **Solution :**
 
 ```bash
-# Demarrer le serveur
+# Démarrer le serveur
 docker compose up -d minecraft
 
-# Attendre le demarrage complet (verifier les logs)
+# Attendre le démarrage complet (vérifier les logs)
 docker compose logs -f minecraft
 # Attendre "Done (XXs)! For help, type "help""
 ```
@@ -259,13 +259,13 @@ docker compose logs -f minecraft
 
 **Solution :**
 
-1. Verifiez que le mot de passe dans `.env` correspond :
+1. Vérifiez que le mot de passe dans `.env` correspond :
 
 ```env
 RCON_PASSWORD=votre_mot_de_passe
 ```
 
-2. Verifiez dans les logs Minecraft :
+2. Vérifiez dans les logs Minecraft :
 
 ```bash
 docker compose logs minecraft | grep -i rcon
@@ -275,18 +275,18 @@ docker compose logs minecraft | grep -i rcon
 
 **Solution :**
 
-Verifiez `.env` :
+Vérifiez `.env` :
 
 ```env
 RCON_HOST=minecraft   # Nom du service Docker, pas localhost
 RCON_PORT=25575
 ```
 
-### Cause 4 : Serveur Minecraft en cours de demarrage
+### Cause 4 : Serveur Minecraft en cours de démarrage
 
 **Solution :**
 
-Le serveur peut prendre 1-5 minutes pour demarrer completement. Attendez le message "Done" dans les logs :
+Le serveur peut prendre 1-5 minutes pour démarrer complètement. Attendez le message "Done" dans les logs :
 
 ```bash
 docker compose logs -f minecraft | grep -i "Done"
@@ -302,14 +302,14 @@ RCON_TIMEOUT=10.0   # 10 secondes au lieu de 5
 
 ---
 
-## Problemes de base de donnees
+## Problèmes de base de données
 
-### Symptome : "Connection refused" a PostgreSQL
+### Symptôme : "Connection refused" à PostgreSQL
 
 **Diagnostic :**
 
 ```bash
-# Verifier le conteneur
+# Vérifier le conteneur
 docker compose ps db
 
 # Voir les logs
@@ -318,17 +318,17 @@ docker compose logs db
 
 ### Erreur : "Connection refused"
 
-**Cause :** PostgreSQL n'est pas demarre ou pas pret.
+**Cause :** PostgreSQL n'est pas démarré ou pas prêt.
 
 **Solution :**
 
 ```bash
-# Demarrer PostgreSQL
+# Démarrer PostgreSQL
 docker compose up -d db
 
 # Attendre que le healthcheck passe
 docker compose ps db
-# STATUS doit etre "healthy"
+# STATUS doit être "healthy"
 ```
 
 ### Erreur : "Authentication failed"
@@ -337,7 +337,7 @@ docker compose ps db
 
 **Solution :**
 
-1. Verifiez `.env` :
+1. Vérifiez `.env` :
 
 ```env
 POSTGRES_USER=minecraft_user
@@ -346,7 +346,7 @@ POSTGRES_DB=minecraft_db
 DATABASE_URL=postgresql://minecraft_user:votre_password@db:5432/minecraft_db
 ```
 
-2. Si le mot de passe a change, recreez le conteneur :
+2. Si le mot de passe a changé, recréez le conteneur :
 
 ```bash
 docker compose down
@@ -354,14 +354,14 @@ docker volume rm minecraft_postgres-data
 docker compose up -d db
 ```
 
-> **Attention :** Cela supprime toutes les donnees !
+> **Attention :** Cela supprime toutes les données !
 
 ### Erreur : "Database does not exist"
 
 **Solution :**
 
 ```bash
-# Creer la base de donnees
+# Créer la base de données
 docker compose exec db psql -U minecraft_user -c "CREATE DATABASE minecraft_db;"
 ```
 
@@ -370,7 +370,7 @@ docker compose exec db psql -U minecraft_user -c "CREATE DATABASE minecraft_db;"
 **Solution :**
 
 ```bash
-# Sauvegarder ce qui peut l'etre
+# Sauvegarder ce qui peut l'être
 docker compose exec db pg_dump -U minecraft_user minecraft_db > emergency_backup.sql
 
 # Restaurer depuis un backup
@@ -379,9 +379,9 @@ docker compose exec -T db psql -U minecraft_user minecraft_db < backup.sql
 
 ---
 
-## Problemes du dashboard web
+## Problèmes du dashboard web
 
-### Symptome : Page blanche ou erreur 500
+### Symptôme : Page blanche ou erreur 500
 
 **Diagnostic :**
 
@@ -389,7 +389,7 @@ docker compose exec -T db psql -U minecraft_user minecraft_db < backup.sql
 # Voir les logs
 docker compose logs web
 
-# Verifier le statut
+# Vérifier le statut
 docker compose ps web
 ```
 
@@ -397,19 +397,19 @@ docker compose ps web
 
 **Solution :**
 
-Generez un secret et ajoutez-le a `.env` :
+Générez un secret et ajoutez-le à `.env` :
 
 ```bash
-# Generer un secret
+# Générer un secret
 openssl rand -base64 32
 
-# Ajouter a .env
+# Ajouter à .env
 NEXTAUTH_SECRET=votre_secret_genere_ici
 ```
 
 ### Erreur OAuth : "Redirect URI mismatch"
 
-**Cause :** L'URL de callback n'est pas configuree dans Discord.
+**Cause :** L'URL de callback n'est pas configurée dans Discord.
 
 **Solution :**
 
@@ -429,7 +429,7 @@ https://votre-domaine.fr/api/auth/callback/discord
 
 ### Erreur : "Unable to fetch session"
 
-**Cause :** NEXTAUTH_URL mal configure.
+**Cause :** NEXTAUTH_URL mal configuré.
 
 **Solution :**
 
@@ -437,25 +437,25 @@ https://votre-domaine.fr/api/auth/callback/discord
 NEXTAUTH_URL=http://localhost:3000  # ou votre URL de production
 ```
 
-### Le dashboard ne charge pas les donnees
+### Le dashboard ne charge pas les données
 
 **Cause :** L'API interne n'est pas accessible.
 
 **Solution :**
 
 ```bash
-# Verifier que le bot est accessible
+# Vérifier que le bot est accessible
 docker compose exec web curl http://bot:8080/health
 
-# Verifier INTERNAL_API_KEY
-# Doit etre identique dans web et bot
+# Vérifier INTERNAL_API_KEY
+# Doit être identique dans web et bot
 ```
 
 ---
 
-## Problemes Minecraft
+## Problèmes Minecraft
 
-### Symptome : Le serveur crash au demarrage
+### Symptôme : Le serveur crash au démarrage
 
 **Diagnostic :**
 
@@ -471,7 +471,7 @@ docker compose logs minecraft | grep -i "error\|exception\|crash"
 
 **Solution :**
 
-Ajoutez a `.env` :
+Ajoutez à `.env` :
 
 ```env
 EULA=TRUE
@@ -483,14 +483,14 @@ EULA=TRUE
 
 **Solution :**
 
-1. Augmentez la memoire dans `.env` :
+1. Augmentez la mémoire dans `.env` :
 
 ```env
 MINECRAFT_MEMORY_MIN=2G
 MINECRAFT_MEMORY_MAX=4G
 ```
 
-2. Verifiez que votre machine a assez de RAM :
+2. Vérifiez que votre machine a assez de RAM :
 
 ```bash
 # Linux
@@ -502,7 +502,7 @@ systeminfo | findstr "Memory"
 
 ### Erreur : "Failed to bind to port"
 
-**Cause :** Le port est deja utilise.
+**Cause :** Le port est déjà utilisé.
 
 **Solution :** Voir la section [Port already in use](#erreur--bind-for-00002556-failed-port-is-already-allocated).
 
@@ -516,42 +516,42 @@ docker compose logs minecraft | grep -i "mod\|forge\|neoforge"
 
 **Solutions :**
 
-1. Verifiez que les mods sont compatibles avec la version de Minecraft
-2. Verifiez que les mods sont dans le bon dossier : `./minecraft/mods/`
-3. Verifiez les permissions des fichiers
+1. Vérifiez que les mods sont compatibles avec la version de Minecraft
+2. Vérifiez que les mods sont dans le bon dossier : `./minecraft/mods/`
+3. Vérifiez les permissions des fichiers
 
 ### Le monde est corrompu
 
 **Solution :**
 
 ```bash
-# Arreter le serveur
+# Arrêter le serveur
 docker compose stop minecraft
 
 # Restaurer depuis un backup
 rm -rf ./minecraft/world
 tar -xzf ./backups/minecraft-world-YYYYMMDD.tar.gz
 
-# Redemarrer
+# Redémarrer
 docker compose up -d minecraft
 ```
 
 ---
 
-## Problemes de performance
+## Problèmes de performance
 
-### Symptome : TPS bas (< 20)
+### Symptôme : TPS bas (< 20)
 
 **Diagnostic :**
 
 ```bash
-# Verifier le TPS
+# Vérifier le TPS
 docker compose exec minecraft rcon-cli "forge tps"
 ```
 
 **Solutions :**
 
-1. **Reduire la distance de rendu :**
+1. **Réduire la distance de rendu :**
 
 ```env
 MINECRAFT_VIEW_DISTANCE=8
@@ -563,36 +563,36 @@ MINECRAFT_VIEW_DISTANCE=8
 MINECRAFT_MEMORY_MAX=6G
 ```
 
-3. **Limiter les entites :**
+3. **Limiter les entités :**
 
 ```bash
 docker compose exec minecraft rcon-cli "kill @e[type=!player]"
 ```
 
-### Symptome : Bot lent a repondre
+### Symptôme : Bot lent à répondre
 
 **Diagnostic :**
 
 ```bash
-# Verifier les ressources
+# Vérifier les ressources
 docker stats
 ```
 
 **Solutions :**
 
-1. Verifiez la connexion a Discord (latence)
-2. Verifiez les performances de la base de donnees :
+1. Vérifiez la connexion à Discord (latence)
+2. Vérifiez les performances de la base de données :
 
 ```sql
 SELECT * FROM pg_stat_activity;
 ```
 
-### Symptome : Dashboard lent
+### Symptôme : Dashboard lent
 
 **Solutions :**
 
 1. Activez le cache Redis
-2. Optimisez les requetes a la base de donnees
+2. Optimisez les requêtes à la base de données
 3. Utilisez la pagination pour les longues listes
 
 ---
@@ -622,7 +622,7 @@ echo "--- Ressources ---"
 docker stats --no-stream
 echo ""
 
-echo "--- Logs recents (erreurs) ---"
+echo "--- Logs récents (erreurs) ---"
 echo "Bot:"
 docker compose logs --tail=20 bot 2>&1 | grep -i "error\|exception" || echo "Aucune erreur"
 echo ""
@@ -652,23 +652,23 @@ echo "=== Fin du diagnostic ==="
 ### Commandes utiles
 
 ```bash
-# Voir tous les logs en temps reel
+# Voir tous les logs en temps réel
 docker compose logs -f
 
-# Voir les logs d'un service specifique
+# Voir les logs d'un service spécifique
 docker compose logs -f bot
 
-# Redemarrer tous les services
+# Redémarrer tous les services
 docker compose restart
 
-# Recreer les conteneurs
+# Recréer les conteneurs
 docker compose up -d --force-recreate
 
-# Acceder a un conteneur
+# Accéder à un conteneur
 docker compose exec bot bash
 docker compose exec minecraft rcon-cli
 
-# Verifier la sante des services
+# Vérifier la santé des services
 docker compose ps
 
 # Voir l'utilisation des ressources
@@ -678,7 +678,7 @@ docker stats
 ### Collecte d'informations pour le support
 
 ```bash
-# Creer un rapport de debug
+# Créer un rapport de debug
 {
     echo "=== Rapport de debug ==="
     echo "Date: $(date)"
@@ -688,19 +688,19 @@ docker stats
     docker compose logs --tail=100
 } > debug_report.txt 2>&1
 
-echo "Rapport genere : debug_report.txt"
+echo "Rapport généré : debug_report.txt"
 ```
 
 ---
 
-## Obtenir de l'aide supplementaire
+## Obtenir de l'aide supplémentaire
 
-Si vous n'avez pas trouve de solution :
+Si vous n'avez pas trouvé de solution :
 
-1. **Verifiez la documentation** : Consultez les autres fichiers de documentation
+1. **Vérifiez la documentation** : Consultez les autres fichiers de documentation
 2. **Cherchez dans les logs** : Les erreurs sont souvent explicites
-3. **Redemarrez les services** : `docker compose restart`
-4. **Recreez les conteneurs** : `docker compose up -d --force-recreate`
+3. **Redémarrez les services** : `docker compose restart`
+4. **Recréez les conteneurs** : `docker compose up -d --force-recreate`
 5. **Ouvrez une issue** : Sur le repository GitHub avec le rapport de debug
 
 ---

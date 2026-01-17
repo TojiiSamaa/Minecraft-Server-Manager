@@ -4,121 +4,121 @@ Guide de maintenance pour les services Docker du projet Minecraft.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
-- [Mise a jour des services](#mise-a-jour-des-services)
+- [Mise à jour des services](#mise-à-jour-des-services)
 - [Sauvegardes (Backups)](#sauvegardes-backups)
 - [Restauration](#restauration)
 - [Monitoring](#monitoring)
 - [Nettoyage](#nettoyage)
 - [Automatisation](#automatisation)
-- [Troubleshooting maintenance](#troubleshooting-maintenance)
+- [Dépannage maintenance](#dépannage-maintenance)
 
 ---
 
 ## Vue d'ensemble
 
-La maintenance reguliere assure le bon fonctionnement et la securite du systeme.
+La maintenance régulière assure le bon fonctionnement et la sécurité du système.
 
-### Calendrier recommande
+### Calendrier recommandé
 
-| Tache | Frequence | Priorite |
+| Tâche | Fréquence | Priorité |
 |-------|-----------|----------|
 | Backups automatiques | Toutes les 6h | Critique |
-| Mise a jour images Docker | Hebdomadaire | Haute |
-| Verification des logs | Quotidienne | Moyenne |
+| Mise à jour images Docker | Hebdomadaire | Haute |
+| Vérification des logs | Quotidienne | Moyenne |
 | Nettoyage Docker | Mensuel | Basse |
-| Audit de securite | Trimestriel | Haute |
+| Audit de sécurité | Trimestriel | Haute |
 
 ---
 
-## Mise a jour des services
+## Mise à jour des services
 
-### Mise a jour des images Docker
+### Mise à jour des images Docker
 
 ```bash
-# Telecharger les dernieres images
+# Télécharger les dernières images
 docker compose pull
 
-# Recreer les conteneurs avec les nouvelles images
+# Recréer les conteneurs avec les nouvelles images
 docker compose up -d
 
-# Verifier que tout fonctionne
+# Vérifier que tout fonctionne
 docker compose ps
 ```
 
-### Mise a jour service par service
+### Mise à jour service par service
 
 #### Minecraft
 
 ```bash
-# Arreter proprement le serveur
+# Arrêter proprement le serveur
 docker compose exec minecraft rcon-cli stop
 
-# Attendre l'arret complet
+# Attendre l'arrêt complet
 docker compose stop minecraft
 
-# Mettre a jour
+# Mettre à jour
 docker compose pull minecraft
 docker compose up -d minecraft
 
-# Verifier les logs
+# Vérifier les logs
 docker compose logs -f minecraft
 ```
 
-> **Attention :** Faites toujours un backup avant de mettre a jour Minecraft !
+> **Attention :** Faites toujours un backup avant de mettre à jour Minecraft !
 
 #### Bot Discord
 
 ```bash
-# Arreter le bot
+# Arrêter le bot
 docker compose stop bot
 
 # Rebuild avec le nouveau code
 docker compose build bot
 
-# Redemarrer
+# Redémarrer
 docker compose up -d bot
 
-# Verifier les logs
+# Vérifier les logs
 docker compose logs -f bot
 ```
 
 #### Dashboard Web
 
 ```bash
-# Arreter le service web
+# Arrêter le service web
 docker compose stop web
 
 # Rebuild
 docker compose build web
 
-# Redemarrer
+# Redémarrer
 docker compose up -d web
 
-# Verifier
+# Vérifier
 docker compose logs -f web
 ```
 
 #### PostgreSQL
 
-> **Attention :** La mise a jour de PostgreSQL peut necessiter une migration de donnees !
+> **Attention :** La mise à jour de PostgreSQL peut nécessiter une migration de données !
 
 ```bash
 # 1. Backup complet
 docker compose exec db pg_dumpall -U minecraft_user > full_backup.sql
 
-# 2. Arreter tous les services
+# 2. Arrêter tous les services
 docker compose down
 
 # 3. Modifier la version dans docker-compose.yml
 # image: postgres:17-alpine
 
-# 4. Supprimer le volume (apres backup !)
+# 4. Supprimer le volume (après backup !)
 docker volume rm minecraft_postgres-data
 
-# 5. Redemarrer
+# 5. Redémarrer
 docker compose up -d db
 
 # 6. Restaurer
@@ -128,20 +128,20 @@ docker compose exec -T db psql -U minecraft_user < full_backup.sql
 #### Redis
 
 ```bash
-# Arreter Redis
+# Arrêter Redis
 docker compose stop redis
 
-# Mettre a jour
+# Mettre à jour
 docker compose pull redis
 docker compose up -d redis
 
-# Verifier
+# Vérifier
 docker compose logs -f redis
 ```
 
-### Mise a jour automatique (Watchtower)
+### Mise à jour automatique (Watchtower)
 
-Ajoutez Watchtower pour les mises a jour automatiques :
+Ajoutez Watchtower pour les mises à jour automatiques :
 
 ```yaml
 # docker-compose.override.yml
@@ -192,41 +192,41 @@ docker compose exec minecraft rcon-cli save-off
 tar -czf ${BACKUP_DIR}/minecraft-world.tar.gz ./minecraft/world
 
 docker compose exec minecraft rcon-cli save-on
-echo "Monde sauvegarde."
+echo "Monde sauvegardé."
 
-# 2. Sauvegarder la base de donnees
+# 2. Sauvegarder la base de données
 echo "Sauvegarde de PostgreSQL..."
 docker compose exec -T db pg_dump -U minecraft_user minecraft_db > ${BACKUP_DIR}/database.sql
 gzip ${BACKUP_DIR}/database.sql
-echo "Base de donnees sauvegardee."
+echo "Base de données sauvegardée."
 
 # 3. Sauvegarder les configurations
 echo "Sauvegarde des configurations..."
 tar -czf ${BACKUP_DIR}/configs.tar.gz ./minecraft/config .env
-echo "Configurations sauvegardees."
+echo "Configurations sauvegardées."
 
 # 4. Sauvegarder Redis (optionnel)
 echo "Sauvegarde de Redis..."
 docker compose exec redis redis-cli -a ${REDIS_PASSWORD} BGSAVE
 sleep 2
 docker cp $(docker compose ps -q redis):/data/dump.rdb ${BACKUP_DIR}/redis.rdb
-echo "Redis sauvegarde."
+echo "Redis sauvegardé."
 
-# Creer un fichier manifest
+# Créer un fichier manifest
 echo "Date: ${DATE}" > ${BACKUP_DIR}/manifest.txt
 echo "Type: Full backup" >> ${BACKUP_DIR}/manifest.txt
 ls -la ${BACKUP_DIR} >> ${BACKUP_DIR}/manifest.txt
 
-echo "=== Backup termine : ${BACKUP_DIR} ==="
+echo "=== Backup terminé : ${BACKUP_DIR} ==="
 ```
 
-### Backup de la base de donnees
+### Backup de la base de données
 
 ```bash
 # Backup simple
 docker compose exec -T db pg_dump -U minecraft_user minecraft_db > backup.sql
 
-# Backup compresse
+# Backup compressé
 docker compose exec -T db pg_dump -U minecraft_user minecraft_db | gzip > backup.sql.gz
 
 # Backup avec timestamp
@@ -239,7 +239,7 @@ docker compose exec -T db pg_dumpall -U minecraft_user > full_backup.sql
 ### Backup du monde Minecraft
 
 ```bash
-# Desactiver la sauvegarde automatique
+# Désactiver la sauvegarde automatique
 docker compose exec minecraft rcon-cli save-off
 
 # Forcer une sauvegarde
@@ -251,7 +251,7 @@ sleep 5
 # Copier le monde
 tar -czf minecraft-world-$(date +%Y%m%d).tar.gz ./minecraft/world
 
-# Reactiver la sauvegarde automatique
+# Réactiver la sauvegarde automatique
 docker compose exec minecraft rcon-cli save-on
 ```
 
@@ -295,14 +295,14 @@ ls -t ${BACKUP_DIR} | tail -n +$((RETENTION + 1)) | while read dir; do
     rm -rf "${BACKUP_DIR}/${dir}"
 done
 
-echo "Rotation terminee. ${RETENTION} backups conserves."
+echo "Rotation terminée. ${RETENTION} backups conservés."
 ```
 
 ---
 
 ## Restauration
 
-### Restauration complete
+### Restauration complète
 
 ```bash
 #!/bin/bash
@@ -317,8 +317,8 @@ fi
 
 echo "=== Restauration depuis ${BACKUP_DIR} ==="
 
-# 1. Arreter tous les services
-echo "Arret des services..."
+# 1. Arrêter tous les services
+echo "Arrêt des services..."
 docker compose down
 
 # 2. Restaurer le monde Minecraft
@@ -326,10 +326,10 @@ echo "Restauration du monde..."
 rm -rf ./minecraft/world
 tar -xzf ${BACKUP_DIR}/minecraft-world.tar.gz
 
-# 3. Restaurer la base de donnees
-echo "Restauration de la base de donnees..."
+# 3. Restaurer la base de données
+echo "Restauration de la base de données..."
 docker compose up -d db
-sleep 10  # Attendre que PostgreSQL demarre
+sleep 10  # Attendre que PostgreSQL démarre
 
 gunzip -c ${BACKUP_DIR}/database.sql.gz | docker compose exec -T db psql -U minecraft_user minecraft_db
 
@@ -337,23 +337,23 @@ gunzip -c ${BACKUP_DIR}/database.sql.gz | docker compose exec -T db psql -U mine
 echo "Restauration des configurations..."
 tar -xzf ${BACKUP_DIR}/configs.tar.gz
 
-# 5. Redemarrer tous les services
-echo "Redemarrage des services..."
+# 5. Redémarrer tous les services
+echo "Redémarrage des services..."
 docker compose up -d
 
-echo "=== Restauration terminee ==="
+echo "=== Restauration terminée ==="
 ```
 
-### Restauration de la base de donnees
+### Restauration de la base de données
 
 ```bash
 # Restauration simple
 docker compose exec -T db psql -U minecraft_user minecraft_db < backup.sql
 
-# Restauration depuis fichier compresse
+# Restauration depuis fichier compressé
 gunzip -c backup.sql.gz | docker compose exec -T db psql -U minecraft_user minecraft_db
 
-# Restauration avec recreation de la base
+# Restauration avec recréation de la base
 docker compose exec db psql -U minecraft_user -c "DROP DATABASE minecraft_db;"
 docker compose exec db psql -U minecraft_user -c "CREATE DATABASE minecraft_db;"
 docker compose exec -T db psql -U minecraft_user minecraft_db < backup.sql
@@ -362,7 +362,7 @@ docker compose exec -T db psql -U minecraft_user minecraft_db < backup.sql
 ### Restauration du monde Minecraft
 
 ```bash
-# Arreter le serveur
+# Arrêter le serveur
 docker compose stop minecraft
 
 # Supprimer l'ancien monde
@@ -371,11 +371,11 @@ rm -rf ./minecraft/world
 # Extraire le backup
 tar -xzf minecraft-world-20240115.tar.gz
 
-# Redemarrer
+# Redémarrer
 docker compose up -d minecraft
 ```
 
-### Restauration partielle (table specifique)
+### Restauration partielle (table spécifique)
 
 ```bash
 # Extraire une table du backup
@@ -398,7 +398,7 @@ docker compose ps
 # Utilisation des ressources
 docker stats
 
-# Logs en temps reel
+# Logs en temps réel
 docker compose logs -f
 ```
 
@@ -414,8 +414,8 @@ echo "=== Monitoring $(date) ==="
 echo -e "\n--- Conteneurs ---"
 docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
 
-# Utilisation memoire
-echo -e "\n--- Memoire ---"
+# Utilisation mémoire
+echo -e "\n--- Mémoire ---"
 docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}\t{{.MemPerc}}"
 
 # Utilisation disque
@@ -446,11 +446,11 @@ WEBHOOK_URL="https://discord.com/api/webhooks/xxx/yyy"
 send_alert() {
     local message=$1
     curl -H "Content-Type: application/json" \
-         -d "{\"content\": \"⚠️ **Alerte Serveur**\n${message}\"}" \
+         -d "{\"content\": \"**Alerte Serveur**\n${message}\"}" \
          ${WEBHOOK_URL}
 }
 
-# Verifier si un conteneur est down
+# Vérifier si un conteneur est down
 for service in minecraft bot web db redis; do
     status=$(docker compose ps -q ${service} | xargs docker inspect -f '{{.State.Running}}' 2>/dev/null)
     if [ "$status" != "true" ]; then
@@ -464,7 +464,7 @@ done
 Utilisez des services comme [Uptime Robot](https://uptimerobot.com/) ou [Healthchecks.io](https://healthchecks.io/) :
 
 ```bash
-# Ping healthchecks.io apres un backup reussi
+# Ping healthchecks.io après un backup réussi
 curl -fsS --retry 3 https://hc-ping.com/your-uuid-here
 ```
 
@@ -475,16 +475,16 @@ curl -fsS --retry 3 https://hc-ping.com/your-uuid-here
 ### Nettoyage Docker
 
 ```bash
-# Supprimer les conteneurs arretes
+# Supprimer les conteneurs arrêtés
 docker container prune -f
 
-# Supprimer les images non utilisees
+# Supprimer les images non utilisées
 docker image prune -f
 
-# Supprimer les volumes non utilises (ATTENTION !)
+# Supprimer les volumes non utilisés (ATTENTION !)
 docker volume prune -f
 
-# Supprimer les reseaux non utilises
+# Supprimer les réseaux non utilisés
 docker network prune -f
 
 # Nettoyage complet (ATTENTION !)
@@ -537,11 +537,11 @@ docker image prune -f
 echo "Nettoyage du cache de build..."
 docker builder prune -f
 
-# Espace recupere
+# Espace récupéré
 echo -e "\n--- Espace disque ---"
 docker system df
 
-echo "=== Nettoyage termine ==="
+echo "=== Nettoyage terminé ==="
 ```
 
 ---
@@ -551,27 +551,27 @@ echo "=== Nettoyage termine ==="
 ### Cron jobs (Linux)
 
 ```bash
-# Editer crontab
+# Éditer crontab
 crontab -e
 
-# Ajouter les taches
+# Ajouter les tâches
 # Backup toutes les 6 heures
 0 */6 * * * /home/user/minecraft/scripts/backup.sh >> /var/log/minecraft-backup.log 2>&1
 
-# Nettoyage Docker chaque dimanche a 3h
+# Nettoyage Docker chaque dimanche à 3h
 0 3 * * 0 docker system prune -f >> /var/log/docker-cleanup.log 2>&1
 
 # Monitoring toutes les 5 minutes
 */5 * * * * /home/user/minecraft/scripts/monitor.sh >> /var/log/minecraft-monitor.log 2>&1
 
-# Rotation des backups chaque jour a 4h
+# Rotation des backups chaque jour à 4h
 0 4 * * * /home/user/minecraft/scripts/rotate-backups.sh >> /var/log/backup-rotation.log 2>&1
 ```
 
-### Taches planifiees (Windows)
+### Tâches planifiées (Windows)
 
 ```powershell
-# Creer une tache planifiee pour le backup
+# Créer une tâche planifiée pour le backup
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-File C:\Minecraft\scripts\backup.ps1"
 $trigger = New-ScheduledTaskTrigger -Daily -At 4am
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Minecraft Backup" -Description "Backup quotidien du serveur Minecraft"
@@ -583,32 +583,32 @@ Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Minecraft Ba
 services:
   minecraft:
     restart: unless-stopped
-    # Redemarre automatiquement sauf si arrete manuellement
+    # Redémarre automatiquement sauf si arrêté manuellement
 
   bot:
     restart: always
-    # Redemarre toujours
+    # Redémarre toujours
 
   db:
     restart: on-failure
-    # Redemarre uniquement en cas d'echec
+    # Redémarre uniquement en cas d'échec
 ```
 
 ---
 
-## Troubleshooting maintenance
+## Dépannage maintenance
 
-### Backup echoue
+### Backup échoué
 
-**Symptome :** Le backup ne se termine pas ou produit des fichiers vides.
+**Symptôme :** Le backup ne se termine pas ou produit des fichiers vides.
 
 **Solutions :**
 
 ```bash
-# Verifier l'espace disque
+# Vérifier l'espace disque
 df -h
 
-# Verifier les permissions
+# Vérifier les permissions
 ls -la ./backups
 
 # Tester manuellement
@@ -616,17 +616,17 @@ docker compose exec db pg_dump -U minecraft_user minecraft_db > test.sql
 echo $?  # Doit retourner 0
 ```
 
-### Restauration echouee
+### Restauration échouée
 
-**Symptome :** Erreurs lors de la restauration de la base.
+**Symptôme :** Erreurs lors de la restauration de la base.
 
 **Solutions :**
 
 ```bash
-# Verifier le format du fichier
+# Vérifier le format du fichier
 file backup.sql
 
-# Verifier les erreurs de syntaxe
+# Vérifier les erreurs de syntaxe
 head -100 backup.sql
 
 # Restaurer avec verbose
@@ -635,7 +635,7 @@ docker compose exec -T db psql -U minecraft_user minecraft_db -v ON_ERROR_STOP=1
 
 ### Conteneur qui redémarre en boucle
 
-**Symptome :** Un service redémarre continuellement.
+**Symptôme :** Un service redémarre continuellement.
 
 **Solutions :**
 
@@ -643,21 +643,21 @@ docker compose exec -T db psql -U minecraft_user minecraft_db -v ON_ERROR_STOP=1
 # Voir les logs
 docker compose logs --tail=100 service_name
 
-# Verifier l'exit code
+# Vérifier l'exit code
 docker inspect $(docker compose ps -q service_name) | grep ExitCode
 
-# Demarrer en mode interactif pour debug
+# Démarrer en mode interactif pour debug
 docker compose run --rm service_name bash
 ```
 
 ### Espace disque insuffisant
 
-**Symptome :** Erreurs "no space left on device".
+**Symptôme :** Erreurs "no space left on device".
 
 **Solutions :**
 
 ```bash
-# Verifier l'espace
+# Vérifier l'espace
 df -h
 
 # Identifier les plus gros fichiers
@@ -666,8 +666,8 @@ du -sh /var/lib/docker/*
 # Nettoyage agressif
 docker system prune -af --volumes
 
-# Deplacer les volumes Docker
-# Editer /etc/docker/daemon.json
+# Déplacer les volumes Docker
+# Éditer /etc/docker/daemon.json
 {
   "data-root": "/mnt/docker-data"
 }
@@ -679,5 +679,5 @@ docker system prune -af --volumes
 
 - [Services Docker](services.md)
 - [Configuration](../configuration.md)
-- [Troubleshooting](../troubleshooting.md)
+- [Dépannage](../troubleshooting.md)
 - [Logs](../logs.md)

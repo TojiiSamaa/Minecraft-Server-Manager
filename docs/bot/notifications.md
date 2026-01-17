@@ -1,32 +1,32 @@
-# Systeme de Notifications
+# Système de Notifications
 
-Guide complet du systeme de notifications Discord pour le bot Minecraft.
+Guide complet du système de notifications Discord pour le bot Minecraft.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
 - [Les 7 types de notifications](#les-7-types-de-notifications)
 - [Configuration via /notifications](#configuration-via-notifications)
 - [Personnalisation des embeds](#personnalisation-des-embeds)
-- [Mentions et roles](#mentions-et-roles)
+- [Mentions et rôles](#mentions-et-rôles)
 - [Cooldowns et rate limiting](#cooldowns-et-rate-limiting)
 - [Exemples visuels](#exemples-visuels)
-- [Configuration avancee](#configuration-avancee)
+- [Configuration avancée](#configuration-avancée)
 
 ---
 
 ## Vue d'ensemble
 
-Le systeme de notifications permet d'envoyer automatiquement des messages sur Discord lors d'evenements specifiques sur le serveur Minecraft.
+Le système de notifications permet d'envoyer automatiquement des messages sur Discord lors d'événements spécifiques sur le serveur Minecraft.
 
-### Fonctionnalites
+### Fonctionnalités
 
-- **7 types de notifications** configurables independamment
+- **7 types de notifications** configurables indépendamment
 - **Channels personnalisables** par type de notification
-- **Mentions** de roles ou utilisateurs
-- **Cooldowns** pour eviter le spam
+- **Mentions** de rôles ou utilisateurs
+- **Cooldowns** pour éviter le spam
 - **Embeds personnalisables** avec couleurs et images
 - **Filtres** pour exclure certains joueurs
 
@@ -36,18 +36,18 @@ Le systeme de notifications permet d'envoyer automatiquement des messages sur Di
 
 ### 1. Connexion joueur (`player_join`)
 
-Envoye lorsqu'un joueur se connecte au serveur.
+Envoyé lorsqu'un joueur se connecte au serveur.
 
-**Informations affichees :**
+**Informations affichées :**
 - Nom du joueur
-- Skin du joueur (tete)
+- Skin du joueur (tête)
 - Heure de connexion
 - Nombre de joueurs en ligne
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [Tete]  Steve a rejoint le serveur!   |
+| [Tête]  Steve a rejoint le serveur!   |
 |                                       |
 | Joueurs en ligne: 5/20                |
 | Heure: 14:32                          |
@@ -58,19 +58,19 @@ Envoye lorsqu'un joueur se connecte au serveur.
 
 ---
 
-### 2. Deconnexion joueur (`player_leave`)
+### 2. Déconnexion joueur (`player_leave`)
 
-Envoye lorsqu'un joueur quitte le serveur.
+Envoyé lorsqu'un joueur quitte le serveur.
 
-**Informations affichees :**
+**Informations affichées :**
 - Nom du joueur
-- Duree de la session
+- Durée de la session
 - Nombre de joueurs restants
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [Tete]  Steve a quitte le serveur     |
+| [Tête]  Steve a quitté le serveur     |
 |                                       |
 | Temps de jeu: 2h 15m                  |
 | Joueurs en ligne: 4/20                |
@@ -83,18 +83,18 @@ Envoye lorsqu'un joueur quitte le serveur.
 
 ### 3. Mort de joueur (`player_death`)
 
-Envoye lorsqu'un joueur meurt dans le jeu.
+Envoyé lorsqu'un joueur meurt dans le jeu.
 
-**Informations affichees :**
+**Informations affichées :**
 - Message de mort complet
 - Cause de la mort
-- Coordonnees (optionnel)
+- Coordonnées (optionnel)
 - Dimension (Overworld, Nether, End)
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [Crane] Steve a ete tue par un Zombie |
+| [Crâne] Steve a été tué par un Zombie |
 |                                       |
 | Dimension: Overworld                  |
 | Position: X: 156, Y: 64, Z: -234      |
@@ -107,21 +107,21 @@ Envoye lorsqu'un joueur meurt dans le jeu.
 
 ### 4. Achievement/Advancement (`player_achievement`)
 
-Envoye lorsqu'un joueur debloque un succes.
+Envoyé lorsqu'un joueur débloque un succès.
 
-**Informations affichees :**
+**Informations affichées :**
 - Nom du joueur
-- Nom du succes
-- Description du succes
-- Categorie (Histoire, Aventure, etc.)
+- Nom du succès
+- Description du succès
+- Catégorie (Histoire, Aventure, etc.)
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [Trophee] Steve a obtenu [Diamants!]  |
+| [Trophée] Steve a obtenu [Diamants!]  |
 |                                       |
 | "Obtenir des diamants"                |
-| Categorie: Minecraft                  |
+| Catégorie: Minecraft                  |
 +---------------------------------------+
 | Couleur: Or (#f39c12)                 |
 +---------------------------------------+
@@ -129,23 +129,23 @@ Envoye lorsqu'un joueur debloque un succes.
 
 ---
 
-### 5. Demarrage serveur (`server_start`)
+### 5. Démarrage serveur (`server_start`)
 
-Envoye lorsque le serveur Minecraft demarre.
+Envoyé lorsque le serveur Minecraft démarre.
 
-**Informations affichees :**
-- Heure de demarrage
+**Informations affichées :**
+- Heure de démarrage
 - Version du serveur
-- Temps de demarrage
+- Temps de démarrage
 - Adresse de connexion
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [Check] Serveur demarre!              |
+| [Check] Serveur démarré!              |
 |                                       |
 | Version: 1.20.4 (NeoForge)            |
-| Temps de demarrage: 45 secondes       |
+| Temps de démarrage: 45 secondes       |
 | Adresse: play.monserveur.fr:25565     |
 +---------------------------------------+
 | Couleur: Vert (#27ae60)               |
@@ -154,23 +154,23 @@ Envoye lorsque le serveur Minecraft demarre.
 
 ---
 
-### 6. Arret serveur (`server_stop`)
+### 6. Arrêt serveur (`server_stop`)
 
-Envoye lorsque le serveur s'arrete.
+Envoyé lorsque le serveur s'arrête.
 
-**Informations affichees :**
-- Heure d'arret
+**Informations affichées :**
+- Heure d'arrêt
 - Uptime total
-- Raison (si specifiee)
-- Qui a initie l'arret
+- Raison (si spécifiée)
+- Qui a initié l'arrêt
 
 **Exemple d'embed :**
 ```
 +---------------------------------------+
-| [X] Serveur arrete                    |
+| [X] Serveur arrêté                    |
 |                                       |
 | Uptime: 3 jours 14 heures             |
-| Raison: Maintenance planifiee         |
+| Raison: Maintenance planifiée         |
 | Par: Admin#1234                       |
 +---------------------------------------+
 | Couleur: Orange (#e67e22)             |
@@ -181,13 +181,13 @@ Envoye lorsque le serveur s'arrete.
 
 ### 7. Alertes performance (`performance_alert`)
 
-Envoye lors de problemes de performance.
+Envoyé lors de problèmes de performance.
 
 **Types d'alertes :**
 - TPS bas (< 18)
-- RAM elevee (> 80%)
-- CPU eleve (> 90%)
-- Latence RCON elevee
+- RAM élevée (> 80%)
+- CPU élevé (> 90%)
+- Latence RCON élevée
 
 **Exemple d'embed :**
 ```
@@ -214,15 +214,15 @@ Envoye lors de problemes de performance.
 /notifications configure
 ```
 
-Cette commande ouvre un menu interactif avec des boutons et menus deroulants.
+Cette commande ouvre un menu interactif avec des boutons et menus déroulants.
 
 ### Options du menu
 
-1. **Selectionner le type** - Choisir quel type de notification configurer
-2. **Definir le channel** - Selectionner le channel de destination
-3. **Activer/Desactiver** - Toggle on/off
-4. **Configurer les mentions** - Ajouter roles/users a mentionner
-5. **Regler le cooldown** - Temps minimum entre notifications
+1. **Sélectionner le type** - Choisir quel type de notification configurer
+2. **Définir le channel** - Sélectionner le channel de destination
+3. **Activer/Désactiver** - Toggle on/off
+4. **Configurer les mentions** - Ajouter rôles/users à mentionner
+5. **Régler le cooldown** - Temps minimum entre notifications
 
 ### Exemples de configuration
 
@@ -230,7 +230,7 @@ Cette commande ouvre un menu interactif avec des boutons et menus deroulants.
 
 ```
 /notifications configure
-> Selectionner: player_join
+> Sélectionner: player_join
 > Channel: #connexions
 > Mentions: @Joueurs
 > Cooldown: 0 secondes
@@ -241,7 +241,7 @@ Cette commande ouvre un menu interactif avec des boutons et menus deroulants.
 
 ```
 /notifications configure
-> Selectionner: performance_alert
+> Sélectionner: performance_alert
 > Channel: #alertes-admin
 > Mentions: @Admin
 > Cooldown: 300 secondes (5 min)
@@ -270,7 +270,7 @@ Cette commande ouvre un menu interactif avec des boutons et menus deroulants.
 embed = {
     "title": "Titre de la notification",
     "description": "Description principale",
-    "color": 0x2ecc71,  # Couleur en hexadecimal
+    "color": 0x2ecc71,  # Couleur en hexadécimal
     "thumbnail": {
         "url": "URL de l'image miniature"
     },
@@ -280,13 +280,13 @@ embed = {
     ],
     "footer": {
         "text": "Texte du footer",
-        "icon_url": "URL icone"
+        "icon_url": "URL icône"
     },
     "timestamp": "2024-01-15T14:32:00Z"
 }
 ```
 
-### Couleurs par defaut
+### Couleurs par défaut
 
 | Type | Couleur | Code Hex |
 |------|---------|----------|
@@ -294,13 +294,13 @@ embed = {
 | `player_leave` | Rouge | `#e74c3c` |
 | `player_death` | Noir | `#2c3e50` |
 | `player_achievement` | Or | `#f39c12` |
-| `server_start` | Vert fonce | `#27ae60` |
+| `server_start` | Vert foncé | `#27ae60` |
 | `server_stop` | Orange | `#e67e22` |
-| `performance_alert` | Rouge fonce | `#c0392b` |
+| `performance_alert` | Rouge foncé | `#c0392b` |
 
-### Personnalisation via la base de donnees
+### Personnalisation via la base de données
 
-Les embeds peuvent etre personnalises dans la base de donnees :
+Les embeds peuvent être personnalisés dans la base de données :
 
 ```sql
 UPDATE notification_settings
@@ -314,29 +314,29 @@ WHERE notification_type = 'player_death';
 
 ---
 
-## Mentions et roles
+## Mentions et rôles
 
 ### Configurer les mentions
 
 ```
 /notifications configure
-> Mentions: @Admin, @Moderateur
+> Mentions: @Admin, @Modérateur
 ```
 
 ### Types de mentions
 
 | Type | Syntaxe | Exemple |
 |------|---------|---------|
-| Role | `@role` | `@Admin` |
+| Rôle | `@role` | `@Admin` |
 | Utilisateur | `@user` | `@User#1234` |
 | Everyone | `@everyone` | Tout le monde |
 | Here | `@here` | Membres en ligne |
 
-> **Attention :** L'utilisation de `@everyone` et `@here` necessite les permissions appropriees.
+> **Attention :** L'utilisation de `@everyone` et `@here` nécessite les permissions appropriées.
 
 ### Mentions conditionnelles
 
-Certaines mentions peuvent etre conditionnelles :
+Certaines mentions peuvent être conditionnelles :
 
 ```python
 # Mentionner @Admin uniquement si TPS < 15
@@ -350,19 +350,19 @@ if alert_type == "performance" and tps < 15:
 
 ### Qu'est-ce qu'un cooldown ?
 
-Le cooldown definit le temps minimum entre deux notifications du meme type.
+Le cooldown définit le temps minimum entre deux notifications du même type.
 
 ### Configuration des cooldowns
 
-| Type | Cooldown recommande | Raison |
+| Type | Cooldown recommandé | Raison |
 |------|---------------------|--------|
 | `player_join` | 0s | Chaque connexion est importante |
-| `player_leave` | 0s | Chaque deconnexion est importante |
-| `player_death` | 30s | Eviter le spam lors de morts repetees |
-| `player_achievement` | 0s | Les succes sont rares |
-| `server_start` | 0s | Evenement rare |
-| `server_stop` | 0s | Evenement rare |
-| `performance_alert` | 300s | Eviter le spam d'alertes |
+| `player_leave` | 0s | Chaque déconnexion est importante |
+| `player_death` | 30s | Éviter le spam lors de morts répétées |
+| `player_achievement` | 0s | Les succès sont rares |
+| `server_start` | 0s | Événement rare |
+| `server_stop` | 0s | Événement rare |
+| `performance_alert` | 300s | Éviter le spam d'alertes |
 
 ### Configurer un cooldown
 
@@ -386,78 +386,76 @@ Le bot inclut un rate limiter global pour respecter les limites Discord :
 ### Notification de connexion
 
 ```
-┌─────────────────────────────────────────────────┐
-│ 🟢 Steve a rejoint le serveur!                  │
-├─────────────────────────────────────────────────┤
-│ ┌──────┐                                        │
-│ │      │  Joueurs en ligne                      │
-│ │ Skin │  5 / 20                                │
-│ │      │                                        │
-│ └──────┘  Premiere visite: Non                  │
-│           Dernier temps de jeu: 156h            │
-├─────────────────────────────────────────────────┤
-│ Aujourd'hui a 14:32                             │
-└─────────────────────────────────────────────────┘
++---------------------------------------------------+
+| Steve a rejoint le serveur!                       |
++---------------------------------------------------+
+| +------+                                          |
+| |      |  Joueurs en ligne                        |
+| | Skin |  5 / 20                                  |
+| |      |                                          |
+| +------+  Première visite: Non                    |
+|           Dernier temps de jeu: 156h              |
++---------------------------------------------------+
+| Aujourd'hui à 14:32                               |
++---------------------------------------------------+
 ```
 
 ### Notification de mort
 
 ```
-┌─────────────────────────────────────────────────┐
-│ ☠️ Steve a ete tue par Zombie                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  Dimension    │ Overworld                       │
-│  Position     │ X: 156, Y: 64, Z: -234          │
-│  Biome        │ Plains                          │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│ C'est sa 42eme mort sur le serveur              │
-└─────────────────────────────────────────────────┘
++---------------------------------------------------+
+| Steve a été tué par Zombie                        |
++---------------------------------------------------+
+|                                                   |
+|  Dimension    | Overworld                         |
+|  Position     | X: 156, Y: 64, Z: -234            |
+|  Biome        | Plains                            |
+|                                                   |
++---------------------------------------------------+
+| C'est sa 42ème mort sur le serveur                |
++---------------------------------------------------+
 ```
 
 ### Notification d'achievement
 
 ```
-┌─────────────────────────────────────────────────┐
-│ 🏆 Steve a obtenu un succes!                    │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  [Diamants!]                                    │
-│  Obtenir des diamants                           │
-│                                                 │
-│  Categorie: Minecraft                           │
-│  Rarete: 60% des joueurs                        │
-│                                                 │
-└─────────────────────────────────────────────────┘
++---------------------------------------------------+
+| Steve a obtenu un succès!                         |
++---------------------------------------------------+
+|                                                   |
+|  [Diamants!]                                      |
+|  Obtenir des diamants                             |
+|                                                   |
+|  Catégorie: Minecraft                             |
+|  Rareté: 60% des joueurs                          |
+|                                                   |
++---------------------------------------------------+
 ```
 
 ### Alerte performance
 
 ```
-┌─────────────────────────────────────────────────┐
-│ ⚠️ ALERTE PERFORMANCE                           │
-├─────────────────────────────────────────────────┤
-│                                                 │
-│  TPS         │ 15.2 ⚠️ (Normal: 20)             │
-│  RAM         │ 3.4 GB / 4 GB (85%) ⚠️           │
-│  CPU         │ 78%                              │
-│  Joueurs     │ 18/20                            │
-│                                                 │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85%          │
-│                                                 │
-├─────────────────────────────────────────────────┤
-│ @Admin - Action recommandee                     │
-└─────────────────────────────────────────────────┘
++---------------------------------------------------+
+| ALERTE PERFORMANCE                                |
++---------------------------------------------------+
+|                                                   |
+|  TPS         | 15.2 (Normal: 20)                  |
+|  RAM         | 3.4 GB / 4 GB (85%)                |
+|  CPU         | 78%                                |
+|  Joueurs     | 18/20                              |
+|                                                   |
++---------------------------------------------------+
+| @Admin - Action recommandée                       |
++---------------------------------------------------+
 ```
 
 ---
 
-## Configuration avancee
+## Configuration avancée
 
 ### Fichier de configuration
 
-Les notifications peuvent aussi etre configurees via le fichier `config/notifications.json` :
+Les notifications peuvent aussi être configurées via le fichier `config/notifications.json` :
 
 ```json
 {
@@ -514,9 +512,9 @@ Les notifications peuvent aussi etre configurees via le fichier `config/notifica
 | `{server}` | Nom du serveur | MonServeur |
 | `{version}` | Version MC | 1.20.4 |
 
-### Webhooks personnalises
+### Webhooks personnalisés
 
-Pour plus de controle, vous pouvez utiliser des webhooks :
+Pour plus de contrôle, vous pouvez utiliser des webhooks :
 
 ```json
 {
@@ -534,6 +532,6 @@ Pour plus de controle, vous pouvez utiliser des webhooks :
 ## Liens connexes
 
 - [Commandes du bot](commands.md)
-- [Systeme de permissions](permissions.md)
-- [Configuration generale](../configuration.md)
-- [Troubleshooting](../troubleshooting.md)
+- [Système de permissions](permissions.md)
+- [Configuration générale](../configuration.md)
+- [Dépannage](../troubleshooting.md)

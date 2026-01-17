@@ -1,10 +1,10 @@
 # Commandes Slash du Bot Discord
 
-Liste complete de toutes les commandes slash disponibles avec exemples d'utilisation.
+Liste complète de toutes les commandes slash disponibles avec exemples d'utilisation.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Commandes Serveur](#commandes-serveur)
 - [Commandes Joueurs](#commandes-joueurs)
@@ -12,7 +12,7 @@ Liste complete de toutes les commandes slash disponibles avec exemples d'utilisa
 - [Commandes Notifications](#commandes-notifications)
 - [Commandes Monitoring](#commandes-monitoring)
 - [Commandes Administration](#commandes-administration)
-- [Reference rapide](#reference-rapide)
+- [Référence rapide](#référence-rapide)
 
 ---
 
@@ -29,16 +29,16 @@ Affiche le statut actuel du serveur Minecraft.
 /server status
 ```
 
-**Reponse :**
+**Réponse :**
 ```
 Statut du Serveur
 
-Etat: En ligne
+État: En ligne
 Version: 1.20.4 (NeoForge)
 Joueurs: 5/20
 TPS: 19.8
 
-Memoire: 2.1 GB / 4 GB (52%)
+Mémoire: 2.1 GB / 4 GB (52%)
 Uptime: 3j 14h 25m
 ```
 
@@ -48,7 +48,7 @@ Uptime: 3j 14h 25m
 
 ### `/server start`
 
-Demarre le serveur Minecraft.
+Démarre le serveur Minecraft.
 
 **Permission requise :** `ADMIN`
 
@@ -57,35 +57,35 @@ Demarre le serveur Minecraft.
 /server start
 ```
 
-**Reponse :**
+**Réponse :**
 ```
-Demarrage du serveur en cours...
-Le serveur devrait etre disponible dans quelques instants.
+Démarrage du serveur en cours...
+Le serveur devrait être disponible dans quelques instants.
 ```
 
 ---
 
 ### `/server stop`
 
-Arrete proprement le serveur Minecraft.
+Arrête proprement le serveur Minecraft.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
-| `delay` | Delai avant arret (secondes) | 60 |
-| `reason` | Raison de l'arret | - |
+| `delay` | Délai avant arrêt (secondes) | 60 |
+| `reason` | Raison de l'arrêt | - |
 
 **Exemple d'utilisation :**
 ```
 /server stop delay:30 reason:Maintenance
 ```
 
-**Reponse :**
+**Réponse :**
 ```
-Arret programme dans 30 secondes.
-Les joueurs ont ete prevenus.
+Arrêt programmé dans 30 secondes.
+Les joueurs ont été prévenus.
 Raison: Maintenance
 ```
 
@@ -93,39 +93,39 @@ Raison: Maintenance
 
 ### `/server restart`
 
-Redemarre le serveur Minecraft.
+Redémarre le serveur Minecraft.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
-| `delay` | Delai avant redemarrage | 60 |
-| `reason` | Raison du redemarrage | - |
+| `delay` | Délai avant redémarrage | 60 |
+| `reason` | Raison du redémarrage | - |
 
 **Exemple d'utilisation :**
 ```
-/server restart delay:120 reason:Mise a jour des plugins
+/server restart delay:120 reason:Mise à jour des plugins
 ```
 
 ---
 
 ### `/server backup`
 
-Cree une sauvegarde manuelle du serveur.
+Crée une sauvegarde manuelle du serveur.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
 | `type` | Type de backup | `full` |
 | `notify` | Notifier sur Discord | `true` |
 
 **Types disponibles :**
-- `full` : Sauvegarde complete (mondes + configs + base de donnees)
+- `full` : Sauvegarde complète (mondes + configs + base de données)
 - `worlds` : Mondes uniquement
-- `database` : Base de donnees uniquement
+- `database` : Base de données uniquement
 - `quick` : Sauvegarde rapide (monde principal)
 
 **Exemple d'utilisation :**
@@ -137,18 +137,18 @@ Cree une sauvegarde manuelle du serveur.
 
 ### `/server console`
 
-Envoie une commande directement a la console du serveur.
+Envoie une commande directement à la console du serveur.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
-| `command` | Commande a executer | Oui |
+| `command` | Commande à exécuter | Oui |
 
 **Exemple d'utilisation :**
 ```
-/server console command:say Bonjour a tous!
+/server console command:say Bonjour à tous!
 ```
 
 ---
@@ -157,7 +157,7 @@ Envoie une commande directement a la console du serveur.
 
 ### `/players list`
 
-Affiche la liste des joueurs connectes.
+Affiche la liste des joueurs connectés.
 
 **Permission requise :** `PLAYER`
 
@@ -166,7 +166,7 @@ Affiche la liste des joueurs connectes.
 /players list
 ```
 
-**Reponse :**
+**Réponse :**
 ```
 Joueurs en ligne (5/20)
 
@@ -195,20 +195,20 @@ Affiche les informations d'un joueur.
 /players info player:Steve
 ```
 
-**Reponse :**
+**Réponse :**
 ```
 Informations - Steve
 
 UUID: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-Premiere connexion: 15/01/2024
-Derniere connexion: En ligne maintenant
+Première connexion: 15/01/2024
+Dernière connexion: En ligne maintenant
 Temps de jeu total: 156h 32m
 
 Statistiques
   Morts: 42
   Kills: 128
-  Blocs casses: 15,432
-  Blocs places: 12,876
+  Blocs cassés: 15,432
+  Blocs placés: 12,876
 ```
 
 ---
@@ -227,7 +227,7 @@ Expulse un joueur du serveur.
 
 **Exemple d'utilisation :**
 ```
-/players kick player:Griefer reason:Comportement inapproprie
+/players kick player:Griefer reason:Comportement inapproprié
 ```
 
 ---
@@ -243,7 +243,7 @@ Bannit un joueur du serveur.
 |--------|-------------|-------------|
 | `player` | Nom du joueur | Oui |
 | `reason` | Raison du bannissement | Non |
-| `duration` | Duree du ban | Non (permanent) |
+| `duration` | Durée du ban | Non (permanent) |
 
 **Exemple d'utilisation :**
 ```
@@ -254,7 +254,7 @@ Bannit un joueur du serveur.
 
 ### `/players unban`
 
-Leve le bannissement d'un joueur.
+Lève le bannissement d'un joueur.
 
 **Permission requise :** `ADMIN`
 
@@ -272,7 +272,7 @@ Leve le bannissement d'un joueur.
 
 ### `/players whitelist add`
 
-Ajoute un joueur a la whitelist.
+Ajoute un joueur à la whitelist.
 
 **Permission requise :** `MODERATOR`
 
@@ -308,7 +308,7 @@ Retire un joueur de la whitelist.
 
 ### `/players whitelist list`
 
-Affiche la liste des joueurs whitelistes.
+Affiche la liste des joueurs whitelistés.
 
 **Permission requise :** `PLAYER`
 
@@ -323,7 +323,7 @@ Affiche la liste des joueurs whitelistes.
 
 ### `/rcon execute`
 
-Execute une commande RCON personnalisee.
+Exécute une commande RCON personnalisée.
 
 **Permission requise :** `ADMIN`
 
@@ -337,38 +337,38 @@ Execute une commande RCON personnalisee.
 /rcon execute command:give @a minecraft:diamond 64
 ```
 
-> **Attention :** Cette commande permet d'executer n'importe quelle commande Minecraft. Utilisez-la avec precaution.
+> **Attention :** Cette commande permet d'exécuter n'importe quelle commande Minecraft. Utilisez-la avec précaution.
 
 ---
 
 ### `/rcon say`
 
-Envoie un message a tous les joueurs.
+Envoie un message à tous les joueurs.
 
 **Permission requise :** `MODERATOR`
 
 **Options :**
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
-| `message` | Message a envoyer | Oui |
+| `message` | Message à envoyer | Oui |
 
 **Exemple d'utilisation :**
 ```
-/rcon say message:Redemarrage du serveur dans 10 minutes!
+/rcon say message:Redémarrage du serveur dans 10 minutes!
 ```
 
 ---
 
 ### `/rcon tp`
 
-Teleporte un joueur.
+Téléporte un joueur.
 
 **Permission requise :** `MODERATOR`
 
 **Options :**
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
-| `player` | Joueur a teleporter | Oui |
+| `player` | Joueur à téléporter | Oui |
 | `target` | Destination (joueur ou coords) | Oui |
 
 **Exemple d'utilisation :**
@@ -381,7 +381,7 @@ Teleporte un joueur.
 
 ### `/rcon give`
 
-Donne des objets a un joueur.
+Donne des objets à un joueur.
 
 **Permission requise :** `ADMIN`
 
@@ -390,7 +390,7 @@ Donne des objets a un joueur.
 |--------|-------------|-------------|
 | `player` | Joueur destinataire | Oui |
 | `item` | ID de l'objet | Oui |
-| `amount` | Quantite | Non (1) |
+| `amount` | Quantité | Non (1) |
 
 **Exemple d'utilisation :**
 ```
@@ -444,14 +444,14 @@ Modifie l'heure du monde.
 
 ### `/rcon weather`
 
-Modifie la meteo.
+Modifie la météo.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
-| `type` | Type de meteo | Oui |
+| `type` | Type de météo | Oui |
 
 **Types disponibles :**
 - `clear`
@@ -477,7 +477,7 @@ Configure les notifications du bot.
 La commande ouvre un menu interactif pour configurer :
 - Channels de destination
 - Types de notifications actives
-- Mentions (roles/users)
+- Mentions (rôles/users)
 - Cooldowns
 
 **Exemple d'utilisation :**
@@ -489,7 +489,7 @@ La commande ouvre un menu interactif pour configurer :
 
 ### `/notifications toggle`
 
-Active/desactive un type de notification.
+Active/désactive un type de notification.
 
 **Permission requise :** `ADMIN`
 
@@ -497,18 +497,18 @@ Active/desactive un type de notification.
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
 | `type` | Type de notification | Oui |
-| `enabled` | Etat | Oui |
+| `enabled` | État | Oui |
 
 **Types disponibles :**
 - `player_join` - Connexion joueur
-- `player_leave` - Deconnexion joueur
+- `player_leave` - Déconnexion joueur
 - `player_death` - Mort joueur
-- `player_achievement` - Succes/Advancement
-- `server_start` - Demarrage serveur
-- `server_stop` - Arret serveur
+- `player_achievement` - Succès/Advancement
+- `server_start` - Démarrage serveur
+- `server_stop` - Arrêt serveur
 - `server_crash` - Crash serveur
 - `performance_alert` - Alertes performance
-- `backup_complete` - Backup termine
+- `backup_complete` - Backup terminé
 
 **Exemple d'utilisation :**
 ```
@@ -544,9 +544,9 @@ Affiche les statistiques de performance.
 **Permission requise :** `PLAYER`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
-| `period` | Periode | 24h |
+| `period` | Période | 24h |
 
 **Exemple d'utilisation :**
 ```
@@ -557,7 +557,7 @@ Affiche les statistiques de performance.
 
 ### `/monitoring alerts`
 
-Affiche les alertes recentes.
+Affiche les alertes récentes.
 
 **Permission requise :** `MODERATOR`
 
@@ -570,14 +570,14 @@ Affiche les alertes recentes.
 
 ### `/monitoring report`
 
-Genere un rapport de performance.
+Génère un rapport de performance.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
-| `period` | Periode du rapport | 7d |
+| `period` | Période du rapport | 7d |
 | `format` | Format | embed |
 
 **Exemple d'utilisation :**
@@ -604,12 +604,12 @@ Synchronise les commandes slash avec Discord.
 
 ### `/admin logs`
 
-Affiche les logs recents du bot.
+Affiche les logs récents du bot.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
 | `lines` | Nombre de lignes | 50 |
 | `level` | Niveau de log | all |
@@ -634,7 +634,7 @@ Recharge la configuration du bot.
 
 ---
 
-## Reference rapide
+## Référence rapide
 
 ### Commandes par permission
 
@@ -651,15 +651,15 @@ Recharge la configuration du bot.
 | Commande | Description |
 |----------|-------------|
 | `/players kick` | Expulser un joueur |
-| `/players whitelist add/remove` | Gerer la whitelist |
+| `/players whitelist add/remove` | Gérer la whitelist |
 | `/rcon say` | Message serveur |
-| `/rcon tp` | Teleporter |
+| `/rcon tp` | Téléporter |
 | `/monitoring alerts` | Voir les alertes |
 
 #### ADMIN
 | Commande | Description |
 |----------|-------------|
-| `/server start/stop/restart` | Controle serveur |
+| `/server start/stop/restart` | Contrôle serveur |
 | `/server backup` | Sauvegardes |
 | `/server console` | Console directe |
 | `/players ban/unban` | Bannissements |
@@ -671,6 +671,6 @@ Recharge la configuration du bot.
 
 ## Liens connexes
 
-- [Systeme de permissions](permissions.md)
+- [Système de permissions](permissions.md)
 - [Commandes RCON](rcon.md)
 - [Notifications](notifications.md)

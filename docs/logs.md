@@ -1,27 +1,27 @@
-# Systeme de Logging
+# Système de Logging
 
-Guide complet du systeme de logs du projet Minecraft.
+Guide complet du système de logs du projet Minecraft.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
 - [Structure des fichiers](#structure-des-fichiers)
 - [Logs Discord](#logs-discord)
-- [Logs base de donnees](#logs-base-de-donnees)
+- [Logs base de données](#logs-base-de-données)
 - [Logs serveur Minecraft](#logs-serveur-minecraft)
 - [Recherche et filtrage](#recherche-et-filtrage)
 - [Export des logs](#export-des-logs)
 - [Commandes /logs](#commandes-logs)
 - [Configuration](#configuration)
-- [Retention et archivage](#retention-et-archivage)
+- [Rétention et archivage](#rétention-et-archivage)
 
 ---
 
 ## Vue d'ensemble
 
-Le systeme de logging centralise tous les evenements des differents services.
+Le système de logging centralise tous les événements des différents services.
 
 ### Sources de logs
 
@@ -43,11 +43,11 @@ Le systeme de logging centralise tous les evenements des differents services.
 
 | Niveau | Description | Couleur | Utilisation |
 |--------|-------------|---------|-------------|
-| `DEBUG` | Details techniques | Gris | Developpement |
-| `INFO` | Informations generales | Bleu | Production |
+| `DEBUG` | Détails techniques | Gris | Développement |
+| `INFO` | Informations générales | Bleu | Production |
 | `WARNING` | Avertissements | Jaune | Attention requise |
-| `ERROR` | Erreurs | Rouge | Probleme a resoudre |
-| `CRITICAL` | Erreurs critiques | Rouge fonce | Action immediate |
+| `ERROR` | Erreurs | Rouge | Problème à résoudre |
+| `CRITICAL` | Erreurs critiques | Rouge foncé | Action immédiate |
 
 ---
 
@@ -103,32 +103,32 @@ Structure :
 | Service | Chemin | Contenu |
 |---------|--------|---------|
 | Bot | `logs/bot/` | Commandes, erreurs, connexions |
-| Minecraft | `logs/minecraft/` | Console serveur, chat, events |
-| Web | `logs/web/` | Requetes HTTP, auth, API |
-| Combined | `logs/combined/` | Tous les logs agreges |
+| Minecraft | `logs/minecraft/` | Console serveur, chat, événements |
+| Web | `logs/web/` | Requêtes HTTP, auth, API |
+| Combined | `logs/combined/` | Tous les logs agrégés |
 
 ---
 
 ## Logs Discord
 
-### Evenements loggues
+### Événements loggués
 
-| Evenement | Niveau | Description |
+| Événement | Niveau | Description |
 |-----------|--------|-------------|
-| Commande executee | INFO | Utilisateur + commande |
-| Commande echouee | ERROR | Erreur + traceback |
-| Bot connecte | INFO | Demarrage du bot |
-| Bot deconnecte | WARNING | Deconnexion |
-| Permission refusee | WARNING | Tentative non autorisee |
+| Commande exécutée | INFO | Utilisateur + commande |
+| Commande échouée | ERROR | Erreur + traceback |
+| Bot connecté | INFO | Démarrage du bot |
+| Bot déconnecté | WARNING | Déconnexion |
+| Permission refusée | WARNING | Tentative non autorisée |
 | Rate limit | WARNING | Limite Discord atteinte |
 
 ### Exemple de logs bot
 
 ```
-[2024-01-15 14:30:00.000] [INFO] [bot.main] Bot connecte en tant que MinecraftBot#1234
-[2024-01-15 14:30:01.000] [INFO] [bot.main] Connecte a 1 serveur(s)
+[2024-01-15 14:30:00.000] [INFO] [bot.main] Bot connecté en tant que MinecraftBot#1234
+[2024-01-15 14:30:01.000] [INFO] [bot.main] Connecté à 1 serveur(s)
 [2024-01-15 14:30:02.000] [INFO] [bot.commands] Synchronisation des commandes slash...
-[2024-01-15 14:30:05.000] [INFO] [bot.commands] 25 commandes synchronisees
+[2024-01-15 14:30:05.000] [INFO] [bot.commands] 25 commandes synchronisées
 [2024-01-15 14:32:15.123] [INFO] [bot.cogs.server] User:Steve#1234 Guild:123456 Command:/server status
 [2024-01-15 14:32:15.456] [DEBUG] [bot.rcon] RCON connect to minecraft:25575
 [2024-01-15 14:32:15.789] [DEBUG] [bot.rcon] RCON response: Server is running
@@ -164,7 +164,7 @@ def setup_logger(name: str, level: str = "INFO"):
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
 
-    # File handler avec rotation journaliere
+    # File handler avec rotation journalière
     today = datetime.now()
     log_dir = f"logs/bot/{today.year}/{today.month:02d}"
     os.makedirs(log_dir, exist_ok=True)
@@ -183,9 +183,9 @@ def setup_logger(name: str, level: str = "INFO"):
 
 ---
 
-## Logs base de donnees
+## Logs base de données
 
-### Schema de la table logs
+### Schéma de la table logs
 
 ```sql
 CREATE TABLE logs (
@@ -207,16 +207,16 @@ CREATE INDEX idx_logs_source ON logs(source);
 CREATE INDEX idx_logs_user_id ON logs(user_id);
 ```
 
-### Types de logs stockes
+### Types de logs stockés
 
-| Source | Description | Retention |
+| Source | Description | Rétention |
 |--------|-------------|-----------|
-| `command` | Commandes executees | 90 jours |
-| `permission` | Verifications de permission | 30 jours |
-| `player` | Evenements joueurs | 180 jours |
-| `server` | Evenements serveur | 365 jours |
+| `command` | Commandes exécutées | 90 jours |
+| `permission` | Vérifications de permission | 30 jours |
+| `player` | Événements joueurs | 180 jours |
+| `server` | Événements serveur | 365 jours |
 | `error` | Erreurs | 30 jours |
-| `audit` | Actions admin | Indefini |
+| `audit` | Actions admin | Indéfini |
 
 ### Insertion de logs
 
@@ -238,10 +238,10 @@ async def log_to_db(
     await db.execute(query, level, source, message, user_id, guild_id, json.dumps(extra))
 ```
 
-### Requetes utiles
+### Requêtes utiles
 
 ```sql
--- Logs des dernieres 24 heures
+-- Logs des dernières 24 heures
 SELECT * FROM logs
 WHERE timestamp > NOW() - INTERVAL '24 hours'
 ORDER BY timestamp DESC;
@@ -254,14 +254,14 @@ AND timestamp > NOW() - INTERVAL '7 days'
 GROUP BY source
 ORDER BY error_count DESC;
 
--- Activite d'un utilisateur
+-- Activité d'un utilisateur
 SELECT timestamp, source, message
 FROM logs
 WHERE user_id = '123456789'
 ORDER BY timestamp DESC
 LIMIT 100;
 
--- Commandes les plus utilisees
+-- Commandes les plus utilisées
 SELECT
     message,
     COUNT(*) as usage_count
@@ -282,7 +282,7 @@ LIMIT 20;
 | Fichier | Contenu |
 |---------|---------|
 | `latest.log` | Log actuel du serveur |
-| `debug.log` | Logs de debug detailles |
+| `debug.log` | Logs de debug détaillés |
 | `crash-reports/` | Rapports de crash |
 
 ### Parser les logs Minecraft
@@ -310,10 +310,10 @@ def parse_minecraft_log(line: str):
 # [14:32:15] [Server thread/INFO]: Steve joined the game
 ```
 
-### Evenements detectes
+### Événements détectés
 
 ```python
-# Patterns d'evenements
+# Patterns d'événements
 PLAYER_JOIN = r'(\w+) joined the game'
 PLAYER_LEAVE = r'(\w+) left the game'
 PLAYER_DEATH = r'(\w+) (was|died|fell|drowned|burned|starved|suffocated|withered|was killed)'
@@ -323,7 +323,7 @@ SERVER_START = r'Done \([\d.]+s\)!'
 SERVER_STOP = r'Stopping server'
 ```
 
-### Integration avec le bot
+### Intégration avec le bot
 
 ```python
 # bot/cogs/log_watcher.py
@@ -340,7 +340,7 @@ class LogWatcher(commands.Cog):
     async def watch_logs(self):
         self.running = True
         async with aiofiles.open(self.log_path, 'r') as f:
-            # Aller a la fin du fichier
+            # Aller à la fin du fichier
             await f.seek(0, 2)
 
             while self.running:
@@ -355,7 +355,7 @@ class LogWatcher(commands.Cog):
         if not parsed:
             return
 
-        # Detecter les evenements
+        # Détecter les événements
         if "joined the game" in parsed['message']:
             await self.on_player_join(parsed)
         elif "left the game" in parsed['message']:
@@ -367,16 +367,16 @@ class LogWatcher(commands.Cog):
 
 ## Recherche et filtrage
 
-### Via la base de donnees
+### Via la base de données
 
 ```sql
--- Recherche par mot-cle
+-- Recherche par mot-clé
 SELECT * FROM logs
 WHERE message ILIKE '%error%'
 ORDER BY timestamp DESC
 LIMIT 50;
 
--- Filtrer par periode
+-- Filtrer par période
 SELECT * FROM logs
 WHERE timestamp BETWEEN '2024-01-15 00:00:00' AND '2024-01-15 23:59:59'
 ORDER BY timestamp;
@@ -406,7 +406,7 @@ find logs/ -name "*.log" -exec grep -l "pattern" {} \;
 # Compter les occurrences
 grep -c "timeout" logs/bot/2024/01/*.log
 
-# Logs en temps reel
+# Logs en temps réel
 tail -f logs/bot/current.log | grep --line-buffered "ERROR"
 ```
 
@@ -422,10 +422,10 @@ Le dashboard offre une interface de recherche :
 │  Recherche : [________________________] [Rechercher]        │
 │                                                             │
 │  Filtres :                                                  │
-│  Niveau : [Tous ▼]  Source : [Tous ▼]  Periode : [24h ▼]  │
+│  Niveau : [Tous ▼]  Source : [Tous ▼]  Période : [24h ▼]  │
 │                                                             │
 │  [ ] Erreurs uniquement                                     │
-│  [ ] Inclure les logs archives                              │
+│  [ ] Inclure les logs archivés                              │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -501,7 +501,7 @@ docker compose exec -T db psql -U minecraft_user -d minecraft_db \
     -c "COPY (SELECT * FROM logs WHERE timestamp > NOW() - INTERVAL '24 hours') TO STDOUT WITH CSV HEADER" \
     > logs_export.csv
 
-# Export compresse
+# Export compressé
 docker compose exec -T db pg_dump -U minecraft_user -t logs minecraft_db | gzip > logs_backup.sql.gz
 ```
 
@@ -511,17 +511,17 @@ docker compose exec -T db pg_dump -U minecraft_user -t logs minecraft_db | gzip 
 
 ### `/logs view`
 
-Affiche les logs recents dans Discord.
+Affiche les logs récents dans Discord.
 
 **Permission requise :** `ADMIN`
 
 **Options :**
 
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
 | `lines` | Nombre de lignes | 20 |
 | `level` | Niveau minimum | INFO |
-| `source` | Source specifique | all |
+| `source` | Source spécifique | all |
 
 **Exemple :**
 
@@ -529,10 +529,10 @@ Affiche les logs recents dans Discord.
 /logs view lines:50 level:error source:rcon
 ```
 
-**Reponse :**
+**Réponse :**
 
 ```
-📋 Logs (50 dernieres lignes) - Filtre: ERROR, Source: rcon
+Logs (50 dernières lignes) - Filtre: ERROR, Source: rcon
 
 [14:40:00] [ERROR] RCON connection timeout after 5s
 [14:42:15] [ERROR] RCON authentication failed
@@ -552,7 +552,7 @@ Recherche dans les logs.
 | Option | Description | Obligatoire |
 |--------|-------------|-------------|
 | `query` | Terme de recherche | Oui |
-| `period` | Periode (1h, 24h, 7d) | Non (24h) |
+| `period` | Période (1h, 24h, 7d) | Non (24h) |
 
 **Exemple :**
 
@@ -568,10 +568,10 @@ Exporte les logs en fichier.
 
 **Options :**
 
-| Option | Description | Defaut |
+| Option | Description | Défaut |
 |--------|-------------|--------|
 | `format` | csv, json, txt | csv |
-| `period` | Periode | 24h |
+| `period` | Période | 24h |
 
 **Exemple :**
 
@@ -579,7 +579,7 @@ Exporte les logs en fichier.
 /logs export format:json period:7d
 ```
 
-**Reponse :** Un fichier est envoye en piece jointe.
+**Réponse :** Un fichier est envoyé en pièce jointe.
 
 ### `/logs stats`
 
@@ -593,12 +593,12 @@ Affiche les statistiques des logs.
 /logs stats
 ```
 
-**Reponse :**
+**Réponse :**
 
 ```
-📊 Statistiques des logs (7 derniers jours)
+Statistiques des logs (7 derniers jours)
 
-Total : 15,432 entrees
+Total : 15,432 entrées
 
 Par niveau :
   DEBUG    : 8,234 (53%)
@@ -625,7 +625,7 @@ Top sources :
 # Niveau de log global
 LOG_LEVEL=info
 
-# Retention des logs (jours)
+# Rétention des logs (jours)
 LOG_RETENTION_DAYS=30
 
 # Taille max des fichiers de log
@@ -634,7 +634,7 @@ LOG_MAX_SIZE=10M
 # Nombre de fichiers de rotation
 LOG_BACKUP_COUNT=5
 
-# Activer les logs dans la base de donnees
+# Activer les logs dans la base de données
 LOG_TO_DATABASE=true
 
 # Activer les logs fichiers
@@ -663,7 +663,7 @@ services:
         max-file: "5"
 ```
 
-### Configuration Python detaillee
+### Configuration Python détaillée
 
 ```python
 # config/logging.py
@@ -720,17 +720,17 @@ LOGGING_CONFIG = {
 
 ---
 
-## Retention et archivage
+## Rétention et archivage
 
-### Politique de retention
+### Politique de rétention
 
-| Type de log | Fichiers | Base de donnees |
+| Type de log | Fichiers | Base de données |
 |-------------|----------|-----------------|
-| Debug | 7 jours | Non stocke |
+| Debug | 7 jours | Non stocké |
 | Info | 30 jours | 90 jours |
 | Warning | 90 jours | 180 jours |
 | Error | 180 jours | 365 jours |
-| Audit | 365 jours | Indefini |
+| Audit | 365 jours | Indéfini |
 
 ### Script de nettoyage
 
@@ -746,7 +746,7 @@ find ${LOG_DIR} -name "*.log" -mtime +30 -delete
 # Compresser les logs de plus de 7 jours
 find ${LOG_DIR} -name "*.log" -mtime +7 -exec gzip {} \;
 
-# Nettoyer la base de donnees
+# Nettoyer la base de données
 docker compose exec -T db psql -U minecraft_user -d minecraft_db << EOF
 DELETE FROM logs WHERE timestamp < NOW() - INTERVAL '90 days' AND level = 'INFO';
 DELETE FROM logs WHERE timestamp < NOW() - INTERVAL '30 days' AND level = 'DEBUG';
@@ -754,7 +754,7 @@ DELETE FROM logs WHERE timestamp < NOW() - INTERVAL '180 days' AND level = 'WARN
 VACUUM ANALYZE logs;
 EOF
 
-echo "Nettoyage des logs termine."
+echo "Nettoyage des logs terminé."
 ```
 
 ### Archivage
@@ -768,13 +768,13 @@ MONTH=$(date -d "last month" +%Y-%m)
 
 mkdir -p ${ARCHIVE_DIR}
 
-# Archiver les logs du mois precedent
+# Archiver les logs du mois précédent
 tar -czf ${ARCHIVE_DIR}/logs-${MONTH}.tar.gz ./logs/*/$(date -d "last month" +%Y)/$(date -d "last month" +%m)/
 
-# Supprimer les fichiers archives
+# Supprimer les fichiers archivés
 rm -rf ./logs/*/$(date -d "last month" +%Y)/$(date -d "last month" +%m)/
 
-echo "Logs du mois ${MONTH} archives."
+echo "Logs du mois ${MONTH} archivés."
 ```
 
 ---
@@ -784,4 +784,4 @@ echo "Logs du mois ${MONTH} archives."
 - [Configuration](configuration.md)
 - [Commandes du bot](bot/commands.md)
 - [Maintenance Docker](docker/maintenance.md)
-- [Troubleshooting](troubleshooting.md)
+- [Dépannage](troubleshooting.md)

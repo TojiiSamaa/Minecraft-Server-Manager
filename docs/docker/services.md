@@ -1,10 +1,10 @@
 # Services Docker
 
-Description complete de tous les services Docker du projet.
+Description complète de tous les services Docker du projet.
 
 ---
 
-## Table des matieres
+## Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
 - [Service minecraft (NeoForge)](#service-minecraft-neoforge)
@@ -12,7 +12,7 @@ Description complete de tous les services Docker du projet.
 - [Service web (Next.js)](#service-web-nextjs)
 - [Service db (PostgreSQL)](#service-db-postgresql)
 - [Service redis](#service-redis)
-- [Reseau et communication](#reseau-et-communication)
+- [Réseau et communication](#réseau-et-communication)
 - [Volumes et persistance](#volumes-et-persistance)
 - [Variables d'environnement](#variables-denvironnement)
 
@@ -20,34 +20,34 @@ Description complete de tous les services Docker du projet.
 
 ## Vue d'ensemble
 
-Le projet utilise Docker Compose pour orchestrer 5 services interconnectes.
+Le projet utilise Docker Compose pour orchestrer 5 services interconnectés.
 
 ### Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                       Docker Network                             │
-│                      (minecraft-network)                         │
-│                                                                  │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │  minecraft   │  │     bot      │  │     web      │          │
-│  │   NeoForge   │  │    Python    │  │   Next.js    │          │
-│  │              │  │              │  │              │          │
-│  │  Port: 25565 │  │  (interne)   │  │  Port: 3000  │          │
-│  │  RCON: 25575 │  │              │  │              │          │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
-│         │                 │                 │                   │
-│         └────────────┬────┴────────┬────────┘                   │
-│                      │             │                            │
-│              ┌───────┴───────┐ ┌───┴───────────┐               │
-│              │      db       │ │     redis     │               │
-│              │  PostgreSQL   │ │               │               │
-│              │  Port: 5432   │ │  Port: 6379   │               │
-│              └───────────────┘ └───────────────┘               │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+|                       Docker Network                                |
+|                      (minecraft-network)                            |
+|                                                                     |
+|  +--------------+  +--------------+  +--------------+               |
+|  |  minecraft   |  |     bot      |  |     web      |               |
+|  |   NeoForge   |  |    Python    |  |   Next.js    |               |
+|  |              |  |              |  |              |               |
+|  |  Port: 25565 |  |  (interne)   |  |  Port: 3000  |               |
+|  |  RCON: 25575 |  |              |  |              |               |
+|  +------+-------+  +------+-------+  +------+-------+               |
+|         |                 |                 |                       |
+|         +------------+----+----+------------+                       |
+|                      |         |                                    |
+|              +-------+-------+ +-------+---------+                  |
+|              |      db       | |     redis       |                  |
+|              |  PostgreSQL   | |                 |                  |
+|              |  Port: 5432   | |  Port: 6379     |                  |
+|              +---------------+ +-----------------+                  |
+|                                                                     |
++---------------------------------------------------------------------+
 
-Ports exposes vers l'hote :
+Ports exposés vers l'hôte :
   - 25565 : Minecraft (TCP/UDP)
   - 3000  : Dashboard Web (TCP)
   - 5432  : PostgreSQL (optionnel, dev uniquement)
@@ -69,7 +69,7 @@ services:
     # Dashboard Next.js
 
   db:
-    # Base de donnees PostgreSQL
+    # Base de données PostgreSQL
 
   redis:
     # Cache Redis
@@ -106,7 +106,7 @@ minecraft:
     VERSION: ${MINECRAFT_VERSION:-1.20.4}
     EULA: "TRUE"
 
-    # Memoire
+    # Mémoire
     MEMORY: ${MINECRAFT_MEMORY_MAX:-4G}
     INIT_MEMORY: ${MINECRAFT_MEMORY_MIN:-2G}
 
@@ -125,7 +125,7 @@ minecraft:
     PVP: ${MINECRAFT_PVP:-true}
     VIEW_DISTANCE: ${MINECRAFT_VIEW_DISTANCE:-10}
 
-    # Timezone
+    # Fuseau horaire
     TZ: ${TZ:-Europe/Paris}
 
   ports:
@@ -160,14 +160,14 @@ minecraft:
 
 | Volume | Chemin conteneur | Description |
 |--------|------------------|-------------|
-| `minecraft-data` | `/data` | Donnees du serveur |
+| `minecraft-data` | `/data` | Données du serveur |
 | `./minecraft/mods` | `/data/mods` | Mods NeoForge |
 | `./minecraft/config` | `/data/config` | Configuration |
 | `./minecraft/world` | `/data/world` | Monde principal |
 
 ### Variables d'environnement
 
-| Variable | Description | Defaut |
+| Variable | Description | Défaut |
 |----------|-------------|--------|
 | `TYPE` | Type de serveur | `NEOFORGE` |
 | `VERSION` | Version Minecraft | `1.20.4` |
@@ -181,13 +181,13 @@ minecraft:
 # Voir les logs
 docker compose logs -f minecraft
 
-# Acceder a la console
+# Accéder à la console
 docker compose exec minecraft rcon-cli
 
-# Redemarrer le serveur
+# Redémarrer le serveur
 docker compose restart minecraft
 
-# Arreter proprement
+# Arrêter proprement
 docker compose exec minecraft rcon-cli stop
 ```
 
@@ -197,7 +197,7 @@ docker compose exec minecraft rcon-cli stop
 
 ### Description
 
-Bot Discord ecrit en Python avec discord.py.
+Bot Discord écrit en Python avec discord.py.
 
 ### Configuration
 
@@ -228,7 +228,7 @@ bot:
     # Redis
     REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
 
-    # General
+    # Général
     TZ: ${TZ:-Europe/Paris}
     LOG_LEVEL: ${LOG_LEVEL:-info}
 
@@ -255,20 +255,20 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Installation des dependances
+# Installation des dépendances
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie du code
 COPY . .
 
-# Point d'entree
+# Point d'entrée
 CMD ["python", "main.py"]
 ```
 
-### Dependances
+### Dépendances
 
-Le bot attend que les services suivants soient prets :
+Le bot attend que les services suivants soient prêts :
 - `db` (PostgreSQL)
 - `redis`
 - `minecraft`
@@ -286,13 +286,13 @@ Le bot attend que les services suivants soient prets :
 # Voir les logs
 docker compose logs -f bot
 
-# Redemarrer le bot
+# Redémarrer le bot
 docker compose restart bot
 
-# Executer une commande Python
+# Exécuter une commande Python
 docker compose exec bot python -c "print('Hello')"
 
-# Acceder au shell
+# Accéder au shell
 docker compose exec bot bash
 ```
 
@@ -333,7 +333,7 @@ web:
     INTERNAL_API_KEY: ${INTERNAL_API_KEY}
     BOT_API_URL: http://bot:8080
 
-    # General
+    # Général
     TZ: ${TZ:-Europe/Paris}
     NODE_ENV: ${NODE_ENV:-production}
 
@@ -362,7 +362,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Installation des dependances
+# Installation des dépendances
 COPY package*.json ./
 RUN npm ci
 
@@ -375,7 +375,7 @@ RUN npm run build
 # Port
 EXPOSE 3000
 
-# Demarrage
+# Démarrage
 CMD ["npm", "start"]
 ```
 
@@ -390,7 +390,7 @@ CMD ["npm", "start"]
 | Volume | Chemin conteneur | Description |
 |--------|------------------|-------------|
 | `./web` | `/app` | Code source |
-| Anonyme | `/app/node_modules` | Dependances npm |
+| Anonyme | `/app/node_modules` | Dépendances npm |
 | Anonyme | `/app/.next` | Build Next.js |
 
 ### Commandes utiles
@@ -399,14 +399,14 @@ CMD ["npm", "start"]
 # Voir les logs
 docker compose logs -f web
 
-# Redemarrer
+# Redémarrer
 docker compose restart web
 
 # Rebuild
 docker compose build web
 docker compose up -d web
 
-# Acceder au shell
+# Accéder au shell
 docker compose exec web sh
 ```
 
@@ -416,7 +416,7 @@ docker compose exec web sh
 
 ### Description
 
-Base de donnees PostgreSQL 16 pour la persistance des donnees.
+Base de données PostgreSQL 16 pour la persistance des données.
 
 ### Configuration
 
@@ -452,13 +452,13 @@ db:
 |------|-----------|-------------|
 | 5432 | TCP | PostgreSQL (interne) |
 
-> **Note :** Le port n'est pas expose par defaut pour des raisons de securite. Ajoutez `- "5432:5432"` dans `ports` pour un acces externe.
+> **Note :** Le port n'est pas exposé par défaut pour des raisons de sécurité. Ajoutez `- "5432:5432"` dans `ports` pour un accès externe.
 
 ### Volumes
 
 | Volume | Chemin conteneur | Description |
 |--------|------------------|-------------|
-| `postgres-data` | `/var/lib/postgresql/data` | Donnees |
+| `postgres-data` | `/var/lib/postgresql/data` | Données |
 | `./docker/init-db.sql` | `/docker-entrypoint-initdb.d/init.sql` | Script init |
 
 ### Script d'initialisation
@@ -496,7 +496,7 @@ CREATE INDEX idx_logs_timestamp ON logs(timestamp);
 # Voir les logs
 docker compose logs -f db
 
-# Acceder a psql
+# Accéder à psql
 docker compose exec db psql -U minecraft_user -d minecraft_db
 
 # Backup
@@ -552,14 +552,14 @@ redis:
 
 | Volume | Chemin conteneur | Description |
 |--------|------------------|-------------|
-| `redis-data` | `/data` | Donnees persistantes |
+| `redis-data` | `/data` | Données persistantes |
 
-### Configuration memoire
+### Configuration mémoire
 
-| Parametre | Description | Defaut |
+| Paramètre | Description | Défaut |
 |-----------|-------------|--------|
-| `maxmemory` | Memoire maximale | `256mb` |
-| `maxmemory-policy` | Politique d'eviction | `allkeys-lru` |
+| `maxmemory` | Mémoire maximale | `256mb` |
+| `maxmemory-policy` | Politique d'éviction | `allkeys-lru` |
 | `appendonly` | Persistance AOF | `yes` |
 
 ### Commandes utiles
@@ -568,7 +568,7 @@ redis:
 # Voir les logs
 docker compose logs -f redis
 
-# Acceder a redis-cli
+# Accéder à redis-cli
 docker compose exec redis redis-cli -a ${REDIS_PASSWORD}
 
 # Voir les statistiques
@@ -580,11 +580,11 @@ docker compose exec redis redis-cli -a ${REDIS_PASSWORD} FLUSHALL
 
 ---
 
-## Reseau et communication
+## Réseau et communication
 
-### Reseau Docker
+### Réseau Docker
 
-Tous les services sont connectes au meme reseau bridge :
+Tous les services sont connectés au même réseau bridge :
 
 ```yaml
 networks:
@@ -627,7 +627,7 @@ conn = await asyncpg.connect(
 
 ## Volumes et persistance
 
-### Volumes nommes
+### Volumes nommés
 
 ```yaml
 volumes:
@@ -672,7 +672,7 @@ docker run --rm -v minecraft-data:/data -v $(pwd):/backup alpine tar czf /backup
 ### Fichier .env complet
 
 ```env
-# General
+# Général
 PROJECT_NAME=MonServeur
 TZ=Europe/Paris
 
@@ -714,4 +714,4 @@ INTERNAL_API_KEY=xxx
 - [Installation](../installation.md)
 - [Configuration](../configuration.md)
 - [Maintenance](maintenance.md)
-- [Troubleshooting](../troubleshooting.md)
+- [Dépannage](../troubleshooting.md)
