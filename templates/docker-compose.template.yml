@@ -1,0 +1,277 @@
+# Docker Compose Template for {{PROJECT_NAME}}
+# Replace all {{PLACEHOLDER}} values before use
+
+version: "3.9"
+
+services:
+  # ============================================
+  # Minecraft Server (NeoForge)
+  # ============================================
+  {{PROJECT_NAME_LOWER}}-minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: {{PROJECT_NAME_LOWER}}-minecraft
+    restart: unless-stopped
+    environment:
+      # Server Type
+      TYPE: NEOFORGE
+      EULA: "TRUE"
+
+      # Server Settings
+      SERVER_NAME: "{{PROJECT_NAME}} Server"
+      MOTD: "Welcome to {{PROJECT_NAME}}!"
+      MAX_PLAYERS: {{MAX_PLAYERS:-20}}
+      DIFFICULTY: {{DIFFICULTY:-normal}}
+      MODE: {{GAME_MODE:-survival}}
+      VIEW_DISTANCE: {{VIEW_DISTANCE:-10}}
+      SPAWN_PROTECTION: {{SPAWN_PROTECTION:-0}}
+
+      # Memory Settings
+      MEMORY: {{MEMORY:-4G}}
+      JVM_XX_OPTS: "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200"
+
+      # RCON Configuration
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: {{RCON_PASSWORD}}
+      RCON_PORT: 25575
+
+      # Additional Settings
+      ENABLE_WHITELIST: {{ENABLE_WHITELIST:-false}}
+      ENFORCE_WHITELIST: {{ENFORCE_WHITELIST:-false}}
+      ONLINE_MODE: {{ONLINE_MODE:-true}}
+      ALLOW_NETHER: {{ALLOW_NETHER:-true}}
+      ENABLE_COMMAND_BLOCK: {{ENABLE_COMMAND_BLOCK:-true}}
+
+      # Timezone
+      TZ: {{TIMEZONE:-Europe/Paris}}
+    ports:
+      - "{{MINECRAFT_PORT:-25565}}:25565"
+      # RCON - UNIQUEMENT local (l'acces se fait via le bot)
+      - "127.0.0.1:{{RCON_PORT:-25575}}:25575"
+    volumes:
+      - {{PROJECT_NAME_LOWER}}-minecraft-data:/data
+    networks:
+      - {{PROJECT_NAME_LOWER}}-public
+      - {{PROJECT_NAME_LOWER}}-internal
+    healthcheck:
+      test: mc-health
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    stdin_open: true
+    tty: true
+
+  # ============================================
+  # Discord Bot
+  # ============================================
+  {{PROJECT_NAME_LOWER}}-bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: {{PROJECT_NAME_LOWER}}-bot
+    restart: unless-stopped
+    depends_on:
+      {{PROJECT_NAME_LOWER}}-minecraft:
+        condition: service_healthy
+      {{PROJECT_NAME_LOWER}}-db:
+        condition: service_healthy
+      {{PROJECT_NAME_LOWER}}-redis:
+        condition: service_healthy
+    environment:
+      # Application
+      NODE_ENV: {{NODE_ENV:-production}}
+
+      # Discord Configuration
+      DISCORD_TOKEN: {{DISCORD_TOKEN}}
+      DISCORD_CLIENT_ID: {{DISCORD_CLIENT_ID}}
+      DISCORD_GUILD_ID: {{DISCORD_GUILD_ID}}
+
+      # RCON Connection
+      RCON_HOST: {{PROJECT_NAME_LOWER}}-minecraft
+      RCON_PORT: 25575
+      RCON_PASSWORD: {{RCON_PASSWORD}}
+
+      # PostgreSQL Connection
+      DATABASE_URL: postgresql://{{POSTGRES_USER}}:{{POSTGRES_PASSWORD}}@{{PROJECT_NAME_LOWER}}-db:5432/{{POSTGRES_DB}}
+      POSTGRES_HOST: {{PROJECT_NAME_LOWER}}-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: {{POSTGRES_USER}}
+      POSTGRES_PASSWORD: {{POSTGRES_PASSWORD}}
+      POSTGRES_DB: {{POSTGRES_DB}}
+
+      # Redis Connection
+      REDIS_URL: redis://:{{REDIS_PASSWORD}}@{{PROJECT_NAME_LOWER}}-redis:6379
+      REDIS_HOST: {{PROJECT_NAME_LOWER}}-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: {{REDIS_PASSWORD}}
+
+      # Timezone
+      TZ: {{TIMEZONE:-Europe/Paris}}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - {{PROJECT_NAME_LOWER}}-bot-logs:/app/logs
+    networks:
+      - {{PROJECT_NAME_LOWER}}-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # ============================================
+  # Web Dashboard (Next.js)
+  # ============================================
+  {{PROJECT_NAME_LOWER}}-web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: {{PROJECT_NAME_LOWER}}-web
+    restart: unless-stopped
+    depends_on:
+      {{PROJECT_NAME_LOWER}}-db:
+        condition: service_healthy
+      {{PROJECT_NAME_LOWER}}-redis:
+        condition: service_healthy
+    environment:
+      # Application
+      NODE_ENV: {{NODE_ENV:-production}}
+      PORT: 3000
+
+      # NextAuth Configuration
+      NEXTAUTH_URL: {{NEXTAUTH_URL:-http://localhost:3000}}
+      NEXTAUTH_SECRET: {{NEXTAUTH_SECRET}}
+
+      # Discord OAuth
+      DISCORD_CLIENT_ID: {{DISCORD_CLIENT_ID}}
+      DISCORD_CLIENT_SECRET: {{DISCORD_CLIENT_SECRET}}
+
+      # PostgreSQL Connection
+      DATABASE_URL: postgresql://{{POSTGRES_USER}}:{{POSTGRES_PASSWORD}}@{{PROJECT_NAME_LOWER}}-db:5432/{{POSTGRES_DB}}
+      POSTGRES_HOST: {{PROJECT_NAME_LOWER}}-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: {{POSTGRES_USER}}
+      POSTGRES_PASSWORD: {{POSTGRES_PASSWORD}}
+      POSTGRES_DB: {{POSTGRES_DB}}
+
+      # Redis Connection
+      REDIS_URL: redis://:{{REDIS_PASSWORD}}@{{PROJECT_NAME_LOWER}}-redis:6379
+      REDIS_HOST: {{PROJECT_NAME_LOWER}}-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: {{REDIS_PASSWORD}}
+
+      # RCON Connection (for server management)
+      RCON_HOST: {{PROJECT_NAME_LOWER}}-minecraft
+      RCON_PORT: 25575
+      RCON_PASSWORD: {{RCON_PASSWORD}}
+
+      # Timezone
+      TZ: {{TIMEZONE:-Europe/Paris}}
+    ports:
+      - "{{WEB_PORT:-3000}}:3000"
+    volumes:
+      - {{PROJECT_NAME_LOWER}}-web-uploads:/app/uploads
+    networks:
+      - {{PROJECT_NAME_LOWER}}-public
+      - {{PROJECT_NAME_LOWER}}-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # ============================================
+  # PostgreSQL Database
+  # ============================================
+  {{PROJECT_NAME_LOWER}}-db:
+    image: postgres:16-alpine
+    container_name: {{PROJECT_NAME_LOWER}}-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: {{POSTGRES_USER}}
+      POSTGRES_PASSWORD: {{POSTGRES_PASSWORD}}
+      POSTGRES_DB: {{POSTGRES_DB}}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: {{TIMEZONE:-Europe/Paris}}
+    ports:
+      # PostgreSQL - UNIQUEMENT local
+      - "127.0.0.1:{{POSTGRES_PORT:-5432}}:5432"
+    volumes:
+      - {{PROJECT_NAME_LOWER}}-postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - {{PROJECT_NAME_LOWER}}-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{POSTGRES_USER}} -d {{POSTGRES_DB}}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # ============================================
+  # Redis Cache
+  # ============================================
+  {{PROJECT_NAME_LOWER}}-redis:
+    image: redis:7-alpine
+    container_name: {{PROJECT_NAME_LOWER}}-redis
+    restart: unless-stopped
+    command: redis-server --requirepass {{REDIS_PASSWORD}} --appendonly yes --maxmemory {{REDIS_MAXMEMORY:-256mb}} --maxmemory-policy allkeys-lru
+    environment:
+      TZ: {{TIMEZONE:-Europe/Paris}}
+    ports:
+      # Redis - UNIQUEMENT local
+      - "127.0.0.1:{{REDIS_PORT:-6379}}:6379"
+    volumes:
+      - {{PROJECT_NAME_LOWER}}-redis-data:/data
+    networks:
+      - {{PROJECT_NAME_LOWER}}-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "{{REDIS_PASSWORD}}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  {{PROJECT_NAME_LOWER}}-public:
+    name: {{PROJECT_NAME_LOWER}}-public
+    driver: bridge
+  {{PROJECT_NAME_LOWER}}-internal:
+    name: {{PROJECT_NAME_LOWER}}-internal
+    driver: bridge
+    internal: true  # Pas d'acces internet
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  {{PROJECT_NAME_LOWER}}-minecraft-data:
+    name: {{PROJECT_NAME_LOWER}}-minecraft-data
+  {{PROJECT_NAME_LOWER}}-postgres-data:
+    name: {{PROJECT_NAME_LOWER}}-postgres-data
+  {{PROJECT_NAME_LOWER}}-redis-data:
+    name: {{PROJECT_NAME_LOWER}}-redis-data
+  {{PROJECT_NAME_LOWER}}-bot-logs:
+    name: {{PROJECT_NAME_LOWER}}-bot-logs
+  {{PROJECT_NAME_LOWER}}-web-uploads:
+    name: {{PROJECT_NAME_LOWER}}-web-uploads

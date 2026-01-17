@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+docs/
+*.md
+
+# IDE
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Logs and backups
+logs/
+backups/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development
+docker-compose.override.yml
+
+# Secrets
+secrets/
+*.pem
+*.key
