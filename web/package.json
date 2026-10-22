@@ -22,7 +22,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "next": "14.1.0",
+    "next": "14.2.35",
     "react": "18.2.0",
     "react-dom": "18.2.0",
 
@@ -97,7 +97,7 @@
 
     "framer-motion": "^10.18.0",
 
-    "sharp": "^0.33.2",
+    "sharp": "^0.35.5",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
@@ -111,7 +111,7 @@
     "autoprefixer": "^10.4.17",
 
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.1.0",
+    "eslint-config-next": "14.2.35",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -135,7 +135,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
 
-    "@next/bundle-analyzer": "^14.1.0",
+    "@next/bundle-analyzer": "^14.2.35",
     "cross-env": "^7.0.3",
     "encoding": "^0.1.13"
   },
@@ -147,6 +147,9 @@
     "*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "sharp": "$sharp"
   },
   "engines": {
     "node": ">=18.17.0",
