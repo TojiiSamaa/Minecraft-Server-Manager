@@ -97,7 +97,7 @@
 
     "framer-motion": "^10.18.0",
 
-    "sharp": ">=0.35.5",
+    "sharp": "^0.35.5",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
@@ -149,7 +149,7 @@
     ]
   },
   "overrides": {
-    "sharp": ">=0.35.5"
+    "sharp": "$sharp"
   },
   "engines": {
     "node": ">=18.17.0",
