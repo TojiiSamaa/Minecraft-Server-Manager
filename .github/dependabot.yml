@@ -1,0 +1,42 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-patch-npm:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "pip"
+    directory: "/bot"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-patch-pip:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "docker"
+    directories:
+      - "/bot"
+      - "/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-patch-docker:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "docker-compose"
+    directories:
+      - "/"
+      - "/templates"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-patch-docker-compose:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
